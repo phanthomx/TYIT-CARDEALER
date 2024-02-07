@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="{% static 'all.css' %}">
+
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    </head>
+    <body>
+        <style>
+            body {
+                font-family:Verdana, Geneva, Tahoma, sans-serif, 'Arial', sans-serif;
+           
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+            }
+    
+            a {
+                color: #3498db;
+                text-decoration: none;
+                margin-bottom: 20px;
+            }
+    
+            div {
+                background-color: #fff;
+                padding: 20px;
+    
+                width: 300px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                animation: fadeIn 1s ease-out;
+            }
+    
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+    
+            label {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+    
+            input {
+                padding: 10px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+    
+            input[type="submit"] {
+                cursor: pointer;
+                background-color: #2ecc71;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                transition: background-color 0.3s ease;
+            }
+    
+            input[type="submit"]:hover {
+                background-color: #27ae60;
+            }
+    
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+        </style>
+    </head>
+    <body>
+    
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">HOME</a></li>
+                    <li><a href="{% url 'EmpRegistration' %}">REGISTRATION</a></li>
+                    <li><a href="{% url 'EmpLogin' %}">LOGIN</a></li>
+                </ul>
+            </nav>
+        </header>
+    
+        <div>
+            <h1>LOGIN</h1>
+            <form id="Loginfrm" method="POST">
+                <label for="elogin">Email:</label>
+                <input id="elogin" type="text" placeholder="Enter your email" required>
+    
+                <label for="epassword">Password:</label>
+                <input id="epassword" type="password" placeholder="Enter your password" required>
+    
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    
+        <script>
+            const csrfToken = "{{ csrf_token }}";
+            console.log(csrfToken);
+            console.log("hi there")
+            // Get the button element by its id
+            const Loginfrm = $("#Loginfrm");
+            Loginfrm.submit(function (e) {
+                e.preventDefault();  // Prevent default form submission
+                let elogin = $('#elogin').val().trim();
+                let epassword = $('#epassword').val().trim();
+                $.ajax({
+                    type: "POST",
+                    url: "/loginverify/",
+                    headers: { "X-CSRFToken": csrfToken },
+                    data: {
+                        eemail: elogin,
+                        epassword: epassword,
+                        csrfmiddlewaretoken: csrfToken,
+                    },
+                    dataType: "json",
+                    
+                    success: function (data) {
+                        if (data.redirect_url) {
+                            // Redirect to the specified URL
+                            window.location.href = data.redirect_url;
+                        } else {
+                            // Handle other responses or actions
+                            console.log('No redirect URL in the response.');
+                        }
+     
+                        // Handle success response
+                    },
+    
+                    // Handle error response
+                });
+            });
+        </script>
+
+
+    </body>
+</html>
