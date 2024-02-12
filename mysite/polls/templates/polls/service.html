@@ -5,20 +5,157 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'all.css' %}">
-    </head>
-    <body>
-        <h1>serviceing</h1>
-        
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'all.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  </head>
+  <body>
+    <h1>serviceing</h1>
+    <div>
+      <div>
+        <form id="service">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
 
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
 
-        
-        <script src="" async defer></script>
-    </body>
+          <label for="phone">Phone Number:</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            pattern="[0-9]{10}"
+            placeholder="###-###-####"
+            required
+          />
+
+          <label for="modelName">Model Name:</label>
+          <input type="text" id="modelName" name="modelName" required />
+
+          <label for="registrationNumber">Car Registration Number:</label>
+          <input
+            type="text"
+            id="registrationNumber"
+            name="registrationNumber"
+            required
+          />
+
+          <label for="appointmentDate">Appointment Date:</label>
+          <input
+            type="date"
+            id="appointmentDate"
+            name="appointmentDate"
+            required
+            min=""
+          />
+
+          <label for="appointmentTime">Appointment Time:</label>
+          <select id="appointmentTime" name="appointmentTime" required>
+            <option value="">Select Time</option>
+            <option value="09:00">09:00</option>
+            <option value="12:00">12:00pm</option>
+            <option value="15:00">3:00pm</option>
+            <option value="18:00">6:00pm</option>
+            <option value="21:00">9:00pm</option>
+          </select>
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const csrfToken = "{{ csrf_token }}";
+      console.log(csrfToken);
+      console.log("Service page");
+      // Get today's date
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; // January is 0!
+      var yyyy = today.getFullYear();
+
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+
+      today = yyyy + "-" + mm + "-" + dd;
+
+      // Set min attribute for appointment date input
+      document.getElementById("appointmentDate").min = today;
+
+      // Disable Sundays
+      var input = document.getElementById("appointmentDate");
+      input.addEventListener("input", function () {
+        var selectedDate = new Date(this.value);
+        if (selectedDate.getDay() == 0) {
+          // 0 is Sunday
+          this.setCustomValidity("Sundays are not available for appointments.");
+        } else {
+          this.setCustomValidity("");
+        }
+      });
+      $(document).ready(function () {
+        const service = $("#service");
+        service.submit(function (e) {
+          e.preventDefault(); // Prevent default form submission
+          var cliname = $("#name").val();
+          var cliemail = $("#email").val();
+          var cliphone = $("#phone").val();
+          var modelName = $("#modelName").val();
+          var registrationNumber = $("#registrationNumber").val();
+          var appointmentDate = $("#appointmentDate").val();
+          var appointmentTime = $("#appointmentTime").val();
+          console.log("Name:", cliname);
+          console.log("Email:", cliemail);
+          console.log("Phone Number:", phone);
+          console.log("Model Name:", modelName);
+          console.log("Car Registration Number:", registrationNumber);
+          console.log("Appointment Date:", appointmentDate);
+          console.log("Appointment Time:", appointmentTime);
+          $.ajax({
+            type: "POST",
+            url: "/servicereq/",
+            headers: { "X-CSRFToken": csrfToken },
+            data: {
+              cliname: cliname, // This seems to be a typo, should it be name?
+              cliemail: cliemail, // This seems to be a typo, should it be email?
+              cliphone: cliphone,
+              modelName: modelName,
+              registrationNumber: registrationNumber,
+              appointmentDate: appointmentDate,
+              appointmentTime: appointmentTime,
+              csrfmiddlewaretoken: csrfToken,
+            },
+            dataType: "json",
+
+            success: function (data) {
+              if (data.redirect_url) {
+                // Redirect to the specified URL
+                window.location.href = data.redirect_url;
+              } else {
+                // Handle other responses or actions
+                console.log("No redirect URL in the response.");
+              }
+
+              // Handle success response
+            },
+
+            error: function (xhr, errmsg, err) {
+              // Handle error response
+              console.log("Error:", errmsg);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
 </html>

@@ -15,14 +15,12 @@ urlpatterns = [
     path('emphome/', views.emphome, name= 'emphome'),
     path('chome/', views.chome, name= 'chome'),
     path('ehome/', views.ehome, name= 'ehome'),
-
     path('loginverify/', views.loginverify, name= 'loginverify'),
     path('emploginverify/', views.emploginverify, name= 'emploginverify'),
     path('buy/', views.buy, name= 'buy'),
-
     path('service/', views.service, name= 'service'),
-
     path('event/', views.events, name= 'events'),
+    path('servicereq/', views.servicereq, name= 'servicereq'),
 
 
 

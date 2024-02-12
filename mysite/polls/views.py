@@ -11,6 +11,9 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from .models import Customer
 from .models import Employee
+from .models import Appointment
+from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import send_mail
 def polls(request):
     return render(request, 'polls/login.html')
 
@@ -37,10 +40,6 @@ def chome(request):
 def ehome(request):
     return render(request, 'polls/empafter.html')
 
-
-
-
-
 def loginverify(request):
     print("-----------login verification------------")
     if request.method == "POST":
@@ -49,62 +48,35 @@ def loginverify(request):
         print(cemail, cpassword)
         all_customers = Customer.objects.all()
 
-    # Print the users (for debugging purposes)
-        elist,epass=[],[]
+        # Print the users (for debugging purposes)
+        elist, epass = [], []
         for customer in all_customers:
             elist.append(customer.Email)
             epass.append(customer.password)
-            print(customer.Email,customer.password)
-        n=elist.index(cemail)
-        m=epass.index(str(cpassword))
-        print(elist,epass)
-        if n == m:
-            user = authenticate(request,Email=cemail,password=cpassword)
-            login(user)
-            print("no problem")
-            messages.success(request, 'Login customer successful')
-            messagess = True
-            redirect_url = '/chome/'
-            return JsonResponse({'redirect_url': redirect_url})
-        else:
-            messages.error(request, 'Invalid email or password')
+            print(customer.Email, customer.password)
+        
+        try:
+            n = elist.index(cemail)
+            m = epass.index(str(cpassword))
+            print(elist, epass)
+            if n == m:
+                user = authenticate(request, Email=cemail, password=cpassword)
+                login(user)
+                print("no problem")
+                messages.success(request, 'Login customer successful')
+                redirect_url = '/chome/'
+                return JsonResponse({'redirect_url': redirect_url})
+                
+            else:
+                raise ValueError("Invalid email or password")
+        except ValueError as e:
+            messages.error(request, str(e))
             print("problem occurred")
-
             redirect_url = '/Registration/'
-            return JsonResponse({'redirect_url': redirect_url})  # Redirect to login page
-    template = 'polls/CustLandingpage.html'
-    return render(request, template)
-# def emploginverify(request):
-#     print("----------- Emplogin verification------------")
-#     if request.method == "POST":
-#         eemail = request.POST.get("eemail")
-#         epassword = request.POST.get('epassword')
-#         print(eemail, epassword)
-#         all_employee = Employee.objects.all()
-#         elist,epass=[],[]
-#         for Employee in all_employees:
-#             elist.append(Employee.Email)
-#             epass.append(Employee.password)
-#             print(Employee.Email,Employee.password)
-#         n=elist.index(eemail)
-#         m=epass.index(str(epassword))
-#         print(elist,epass)
-#         if n == m:
-#             user = authenticate(request,Empemail=eemail,Emppassword=epassword)
-#             print(user)
-#             login(request, user)
-#             print("no problem")
-#             messages.success(request, 'Login  emp successful')
-#             messagess = True
-#             redirect_url = '/ehome/'
-#             return JsonResponse({'redirect_url': redirect_url})
-#         else:
-#             messages.error(request, 'Invalid email or password')
-#             print("problem occurred")
-#             redirect_url = '/EmpR/'
-#             return JsonResponse({'redirect_url': redirect_url})  
-#     template = 'polls/CustLandingpage.html'
-#     return render(request, template)
+            return JsonResponse({'redirect_url': redirect_url})
+
+    # If request method is not POST or if there's an issue with the request
+    return JsonResponse({'redirect_url': '/Registration/'})
 
 def emploginverify(request):
     print("----------- Emplogin verification------------")
@@ -150,13 +122,6 @@ def Registration(request):
 
 def EmpRegistration(request):
     return render(request, 'polls/EmpRegia.html')
-  
-# def EmpRegistration(request):
-#     template = loader.get_template('polls/EmpReg.html')
-#     return HttpResponse(template.render())
-
-
-  
 def defaultpg(request):
     print("-----------challa  bagh------------")
     if request.method == "POST":
@@ -178,7 +143,6 @@ def defaultpg(request):
     # You may want to handle the case when the request method is not POST
     template = loader.get_template('polls/EmpLogin.html')
     return HttpResponse(template.render())
-
 
 def emphome(request):
     print("-----------Page worked------------")
@@ -202,7 +166,31 @@ def emphome(request):
     return HttpResponse(template.render())
 def hi(request):
         return render(request, 'polls/EmpReg.html')
+def servicereq(request):
+    print("----------Service req recieved---------")
+    if request.method == "POST":
+        name = request.POST.get("cliname")
+        email = request.POST.get("cliemail")
+        phone = request.POST.get("cliphone")
+        modelName = request.POST.get("modelName")
+        registrationNumber = request.POST.get("registrationNumber")
+        appointmentDate = request.POST.get("appointmentDate")
+        appointmentTime = request.POST.get("appointmentTime")
+        all_appointment = Appointment.objects.all()
 
-    
+        
+        for apps in all_appointment:
+            print(apps)
+        newserv=Appointment(name=name,email=email,phone=phone,model_name=modelName,registration_number=registrationNumber,appointment_date=appointmentDate,appointment_time=appointmentTime,count="1")
+        newserv.save()
+        send_mail(
+                "Subject here",
+                "Here is the message.",
+                "athenamcgonagall7@gmail.com@gmail.com",
+                ["aryanjbagwe@gmail.com"],
+                fail_silently=False,) # Assng Employee is your model for employees
+        print(name, email, phone, modelName, registrationNumber, appointmentDate, appointmentTime)
+        redirect_url = '/chome/'
+        return JsonResponse({'redirect_url': redirect_url})
    
 
