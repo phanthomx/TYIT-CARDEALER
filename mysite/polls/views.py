@@ -186,7 +186,7 @@ def servicereq(request):
         send_mail(
                 "Subject here",
                 "Here is the message.",
-                "athenamcgonagall7@gmail.com@gmail.com",
+                "athenamcgonagall7@gmail.com",
                 ["aryanjbagwe@gmail.com"],
                 fail_silently=False,) # Assng Employee is your model for employees
         print(name, email, phone, modelName, registrationNumber, appointmentDate, appointmentTime)
