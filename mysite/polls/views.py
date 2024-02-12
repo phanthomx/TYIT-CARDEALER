@@ -13,7 +13,7 @@ from .models import Customer
 from .models import Employee
 from .models import Appointment
 from django.core.mail import BadHeaderError, send_mail
-from django.core.mail import send_mail
+from django.conf import settings
 def polls(request):
     return render(request, 'polls/login.html')
 
@@ -177,18 +177,19 @@ def servicereq(request):
         appointmentDate = request.POST.get("appointmentDate")
         appointmentTime = request.POST.get("appointmentTime")
         all_appointment = Appointment.objects.all()
-
-        
+        print("+++++++++++++++++++")
+        print(email)
         for apps in all_appointment:
             print(apps)
         newserv=Appointment(name=name,email=email,phone=phone,model_name=modelName,registration_number=registrationNumber,appointment_date=appointmentDate,appointment_time=appointmentTime,count="1")
         newserv.save()
-        send_mail(
-                "Subject here",
-                "Here is the message.",
-                "athenamcgonagall7@gmail.com",
-                ["aryanjbagwe@gmail.com"],
-                fail_silently=False,) # Assng Employee is your model for employees
+        subject = "Regarding your Service Appointment"
+        message = f"Thanks {name} for booking your service appointment with us at {appointmentTime} on date {appointmentDate}"
+        
+        # Send the email
+        send_mail(subject, message, "athenamcgonagall7@gmail.com", [email])
+        
+ # Assng Employee is your model for employees
         print(name, email, phone, modelName, registrationNumber, appointmentDate, appointmentTime)
         redirect_url = '/chome/'
         return JsonResponse({'redirect_url': redirect_url})

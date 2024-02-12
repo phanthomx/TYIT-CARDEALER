@@ -137,4 +137,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'athenamcgonagall7@gmail.com'
-EMAIL_HOST_PASSWORD = 'Zeus#2211'
+EMAIL_HOST_PASSWORD = 'hkvw dsmi bwxb uyjl'
