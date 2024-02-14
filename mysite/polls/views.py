@@ -4,16 +4,17 @@ from django.http import JsonResponse
 from django.template import loader
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
 from .models import Customer
 from .models import Employee
 from .models import Appointment
 from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
+from django.db import connection
+import hashlib
+from datetime import date
 def polls(request):
     return render(request, 'polls/login.html')
 
@@ -181,14 +182,43 @@ def servicereq(request):
         print(email)
         for apps in all_appointment:
             print(apps)
-        newserv=Appointment(name=name,email=email,phone=phone,model_name=modelName,registration_number=registrationNumber,appointment_date=appointmentDate,appointment_time=appointmentTime,count="1")
-        newserv.save()
-        subject = "Regarding your Service Appointment"
-        message = f"Thanks {name} for booking your service appointment with us at {appointmentTime} on date {appointmentDate}"
+            
+        start_date = date.today()
+        end_date = appointmentDate  # Adjust as needed
         
-        # Send the email
-        send_mail(subject, message, "athenamcgonagall7@gmail.com", [email])
-        
+        # Check if the appointment date falls within the range
+        # is_between_dates = Appointment.objects.filter(
+        #     Q(appointment_date__range=[start_date, end_date])
+        # ).exists()
+        # Iterate through the raw SQL query result
+
+        # newserv=Appointment(name=name,email=email,phone=phone,model_name=modelName,registration_number=registrationNumber,appointment_date=appointmentDate,appointment_time=appointmentTime,count="1")
+        # newserv.save()
+        cursor = connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM polls_appointment WHERE appointment_date = %s AND appointment_time = %s", [appointmentDate, appointmentTime])
+        count_result = cursor.fetchone()[0]
+        appointment_count = count_result
+        print(appointment_count)
+        token_data = f"{email}{appointmentDate}{appointmentTime}"
+        hashed_token = hashlib.sha256(token_data.encode()).hexdigest()
+        token = hashed_token[:10]
+        if appointment_count == 0 :
+            newserv=Appointment(name=name,email=email,phone=phone,model_name=modelName,registration_number=registrationNumber,appointment_date=appointmentDate,appointment_time=appointmentTime,count="1",token=token)
+            newserv.save()
+            print("slot available")
+            subject = "Regarding your Service Appointment"
+            message = f"Thanks {name} for booking your service appointment with us at {appointmentTime} on date {appointmentDate}  your token is {token}"
+            send_mail(subject, message, "athenamcgonagall7@gmail.com", [email])
+            
+        if appointment_count  < 6  and appointment_count >= 1:
+            newserv=Appointment(name=name,email=email,phone=phone,model_name=modelName,registration_number=registrationNumber,appointment_date=appointmentDate,appointment_time=appointmentTime,count=appointment_count+1,token=token)
+            newserv.save()
+            print("slot available")
+            subject = "Regarding your Service Appointment"
+            message = f"Thanks {name} for booking your service appointment with us at {appointmentTime} on date {appointmentDate} your token is {token}"
+            send_mail(subject, message, "athenamcgonagall7@gmail.com", [email])
+        else:
+            print("Slot not available")
  # Assng Employee is your model for employees
         print(name, email, phone, modelName, registrationNumber, appointmentDate, appointmentTime)
         redirect_url = '/chome/'

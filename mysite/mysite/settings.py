@@ -80,7 +80,7 @@ AUTHENTICATION_BACKENDS = (
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "polls",
+        "NAME": "dbl",
         "USER": "root",
         "PASSWORD":"Zeus#2211",
         "HOST":"127.0.0.1","aryanbagwe"
