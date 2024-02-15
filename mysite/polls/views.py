@@ -33,6 +33,10 @@ def buy(request):
     return render(request, 'polls/buy.html')
 def service(request):
     return render(request, 'polls/service.html')
+
+def eservice(request):
+    return render(request, 'polls/EmpServ.html')
+    
     
 def events(request):
     return render(request, 'polls/events.html')
@@ -185,15 +189,6 @@ def servicereq(request):
             
         start_date = date.today()
         end_date = appointmentDate  # Adjust as needed
-        
-        # Check if the appointment date falls within the range
-        # is_between_dates = Appointment.objects.filter(
-        #     Q(appointment_date__range=[start_date, end_date])
-        # ).exists()
-        # Iterate through the raw SQL query result
-
-        # newserv=Appointment(name=name,email=email,phone=phone,model_name=modelName,registration_number=registrationNumber,appointment_date=appointmentDate,appointment_time=appointmentTime,count="1")
-        # newserv.save()
         cursor = connection.cursor()
         cursor.execute("SELECT COUNT(*) FROM polls_appointment WHERE appointment_date = %s AND appointment_time = %s", [appointmentDate, appointmentTime])
         count_result = cursor.fetchone()[0]
@@ -225,3 +220,15 @@ def servicereq(request):
         return JsonResponse({'redirect_url': redirect_url})
    
 
+def getservice(request):
+    if request.method == "POST":
+                appointmentDate = request.POST.get("appointmentDate")
+                print(appointmentDate)
+                cursor = connection.cursor()
+                cursor.execute("SELECT DISTINCT name,email,phone,appointment_time , token FROM polls_appointment WHERE appointment_date = %s ORDER BY appointment_time ASC", [appointmentDate])
+                count_result = cursor.fetchall()
+                context = {'query_result': count_result}
+                return render(request, 'polls/EmpServ.html', context)
+               
+    return render(request, 'polls/EmpServ.html', context)
+        

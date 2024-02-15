@@ -19,8 +19,11 @@ urlpatterns = [
     path('emploginverify/', views.emploginverify, name= 'emploginverify'),
     path('buy/', views.buy, name= 'buy'),
     path('service/', views.service, name= 'service'),
+    path('eservice/', views.eservice, name= 'eservice'),
     path('event/', views.events, name= 'events'),
     path('servicereq/', views.servicereq, name= 'servicereq'),
+    path('getservice/', views.getservice, name= 'getservice'),
+    
 
 
 
