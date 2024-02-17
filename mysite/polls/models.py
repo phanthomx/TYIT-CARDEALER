@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from cloudinary.models import CloudinaryField
+from cloudinary_storage.storage import MediaCloudinaryStorage, RawMediaCloudinaryStorage, VideoMediaCloudinaryStorage
+from cloudinary_storage.validators import validate_video
 
 class Customer(models.Model):
   name = models.CharField(max_length=20)
@@ -38,5 +41,25 @@ class Appointment(models.Model):
 
     def __str__(self):
         return self.name
-      
 
+class Event(models.Model):
+    event_id = models.CharField(max_length=100, unique=True)
+    event_name = models.CharField(max_length=200)
+    date_time = models.DateTimeField()
+    event_description = models.CharField(max_length=500)
+    event_total_attendees = models.IntegerField(blank=True, null=True)
+    # Assuming you want to store URLs of photos or videos
+    media_1 = CloudinaryField("media", blank=True, null=True)
+    media_2 = CloudinaryField("media", blank=True, null=True)
+    media_3 = CloudinaryField("media", blank=True, null=True)
+    media_4 = CloudinaryField("media", blank=True, null=True)
+    media_5 = CloudinaryField("media", blank=True, null=True)
+    media_6 = CloudinaryField("media", blank=True, null=True)
+    media_7 = CloudinaryField("media", blank=True, null=True)
+    media_8 = CloudinaryField("media", blank=True, null=True)
+    video_1 = CloudinaryField("video", blank=True, null=True)
+    video = models.FileField(upload_to='tests-videos/', blank=True, storage=VideoMediaCloudinaryStorage(),
+                             validators=[validate_video])
+
+    def __str__(self):
+        return self.event_name

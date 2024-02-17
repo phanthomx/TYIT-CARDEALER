@@ -13,6 +13,7 @@ from .models import Appointment
 from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
 from django.db import connection
+from .models import Event
 import hashlib
 from datetime import date
 def polls(request):
@@ -39,7 +40,10 @@ def eservice(request):
     
     
 def events(request):
-    return render(request, 'polls/events.html')
+    events = Event.objects.all()
+    # Pass the events to the template for rendering
+    return render(request, 'polls/events.html', {'events': events})
+
 def chome(request):
     return render(request, 'polls/eafter.html')
 def ehome(request):
