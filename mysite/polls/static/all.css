@@ -1,0 +1,49 @@
+header {
+    background-color: #01170f;
+    color: white;
+    padding: 15px;
+    position: fixed;  /* Add this line to make the header fixed at the top */
+    width: 100%;      /* Set the width to 100% to span the entire viewport */
+    top: 0;           /* Position it at the top */
+    z-index: 1000;    /* Set a high z-index to make sure it appears above other elements */
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: rgb(242, 241, 241);
+}
+/* Default styles */
+
+@media screen and (max-width: 768px) {
+    /* Styles for screens smaller than 768px */
+}
+
+@media screen and (max-width: 480px) {
+    /* Styles for screens smaller than 480px */
+}
+
+body {
+  background-color: aliceblue;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 0; /* Remove default body margin */
+  height: 100vh; /* Set the height to the full viewport height */
+
+  /* Responsive styles using media queries */
+  @media (max-width: 767px) {
+    /* Styles for screens smaller than 768px (e.g., cell phones) */
+    background-position: center top; /* Adjust the position for smaller screens */
+  }
+}
