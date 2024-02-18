@@ -1,27 +1,28 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from django.http import JsonResponse
-from django.template import loader
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from .models import Customer
-from .models import Employee
-from .models import Appointment
-from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import send_mail
 from django.conf import settings
 from django.db import connection
-from .models import Event
+from django.contrib.auth import  authenticate
+
+from datetime import datetime, timedelta, date
+from .models import Customer, Employee, Appointment, Attendee, Event
 import hashlib
-from datetime import date
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+
+
+
 def polls(request):
     return render(request, 'polls/login.html')
 
 def home(request):
-  template = loader.get_template('polls/Home.html')
-  return HttpResponse(template.render())
+    return render(request,'polls/Home.html')
+  
 
 def login(request):
     return render(request, 'polls/login.html')
@@ -37,15 +38,45 @@ def service(request):
 
 def eservice(request):
     return render(request, 'polls/EmpServ.html')
-    
-    
 def events(request):
-    events = Event.objects.all()
-    # Pass the events to the template for rendering
-    return render(request, 'polls/events.html', {'events': events})
+    if request.method == 'POST':
+        event = request.POST.get('event_name')  # Assuming the event name is passed from the form
+        current_datetime = timezone.now()
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        eventAttendess = request.POST.get('eventta')
+        print(eventAttendess)
+        cursor = connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM polls_Attendee WHERE event =%s", [event])
+        count_result = cursor.fetchone()
+        attendee_count = count_result[0]
+        print(attendee_count)
+        # Optionally, you can display a success message
+        if int(attendee_count) < int(eventAttendess):
+                    messages.success(request, 'Thank you for your registration!')
+                    attendee = Attendee.objects.create(event=event, name=name, email=email, phone=phone)
+                    attendee.save()
+                    moe = "Your registration is scuccessful"
 
+        else:
+                    moe = "Sorry registrations are full"
+
+            
+        # Retrieve events again to update the context with the latest data
+        events = Event.objects.all()
+        # Pass the success message and events to the template for rendering
+        return render(request, 'polls/events.html', {'events': events, 'success_message': moe , 'eventname': event })
+
+    else:
+        events = Event.objects.all()
+        # Pass the events to the template for rendering
+        return render(request, 'polls/events.html', {'events': events})
 def chome(request):
-    return render(request, 'polls/eafter.html')
+
+        return render(request, 'polls/eafter.html')
+
+@login_required
 def ehome(request):
     return render(request, 'polls/empafter.html')
 
@@ -70,7 +101,8 @@ def loginverify(request):
             print(elist, epass)
             if n == m:
                 user = authenticate(request, Email=cemail, password=cpassword)
-                login(user)
+                auth_login(request,user)
+
                 print("no problem")
                 messages.success(request, 'Login customer successful')
                 redirect_url = '/chome/'
@@ -88,6 +120,7 @@ def loginverify(request):
     return JsonResponse({'redirect_url': '/Registration/'})
 
 def emploginverify(request):
+
     print("----------- Emplogin verification------------")
     if request.method == "POST":
         eemail = request.POST.get("eemail")
@@ -104,9 +137,16 @@ def emploginverify(request):
             m = epass.index(str(epassword))
             print(elist, epass)
             if n == m:
+                
                 user = authenticate(request, Empemail=eemail, Emppassword=epassword)
                 print(user)
-                login(user)
+               
+                if user is not None:
+                    print(user)
+                    login(request, user)
+                print(user)
+                auth_login(request,user)
+                
                 print("no problem")
                 messages.success(request, 'Login  emp successful')
                 messagess = True
@@ -235,4 +275,23 @@ def getservice(request):
                 return render(request, 'polls/EmpServ.html', context)
                
     return render(request, 'polls/EmpServ.html', context)
-        
+
+from django.shortcuts import render
+from polls.models import Attendee  # Assuming the model name is Attendee
+
+from polls.models import Event  # Import the Event model
+
+from polls.models import Event  # Import the Event model
+
+def getevent(request):
+    if request.method == "POST":
+        eventname = request.POST.get("selected_event")
+        print(eventname)
+        attendees = Attendee.objects.filter(event=eventname)
+        event_list = Event.objects.values_list('event_name', 'date_time').distinct()
+
+        return render(request, 'polls/EmpEvents.html', {'events': event_list, 'attendees': attendees})
+    else:
+        event_list = Event.objects.values_list('event_name', 'date_time').distinct()
+
+        return render(request, 'polls/EmpEvents.html', {'events': event_list})

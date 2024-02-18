@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management</title>
+    <link rel="stylesheet" href="{% static 'all.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        header {
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+        .empty-message {
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Logout</a></li>
+                <li><a href="{% url 'buy' %}">BUY</a></li>
+                <li><a href="{% url 'eservice' %}">SERVICE</a></li>
+                <li><a href="{% url 'getevent' %}">EVENTS</a></li>
+                <li><a href="{% url 'ehome' %}">Home</a></li>
+
+            </ul>
+        </nav>
+    </header><br><br><br><br><br>
+    <form action="{% url 'getevent' %}" method="post">
+        {% csrf_token %}
+        <label for="selected_event">Select Event:</label>
+        <select name="selected_event" id="selected_event">
+            {% for event, date_time in events %}
+                <option value="{{ event }}">{{ event }} - {{ date_time }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Registration Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendee in attendees %}
+                <tr>
+                    <td>{{ attendee.name }}</td>
+                    <td>{{ attendee.email }}</td>
+                    <td>{{ attendee.phone }}</td>
+                    <td>{{ attendee.registration_date }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="empty-message">No attendees found for this event.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

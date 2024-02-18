@@ -68,9 +68,10 @@
                 <ul>
                     <li><a href="{% url 'home' %}">Logout</a></li>
                     <li><a href="{% url 'buy' %}">BUY</a></li>
-                    <li><a href="{% url 'service' %}">SERVICE</a></li>
-                    <li><a href="{% url 'events' %}">EVENTS</a></li>
-
+                    <li><a href="{% url 'eservice' %}">SERVICE</a></li>
+                    <li><a href="{% url 'getevent' %}">EVENTS</a></li>
+                    <li><a href="{% url 'ehome' %}">Home</a></li>
+    
                 </ul>
             </nav>
         </header>
@@ -92,7 +93,7 @@
         </div>
         <div id="bcars">
             <div id="ccars">
-                <a href="{% url 'events' %}">
+                <a href="{% url 'getevent' %}">
                 <img src="{% static "images/event.jpg" %}" alt="" width="350px" height="350px"/>
             </a>
             </div>
@@ -100,7 +101,7 @@
         </div>
         <div id="bcars">
             <div id="ccars">
-                <a href="{% url 'events' %}">
+                <a href="{% url 'getevent' %}">
                 <img src="{% static "images/event.jpg" %}" alt="" width="350px" height="350px"/>
             </a>
             </div>

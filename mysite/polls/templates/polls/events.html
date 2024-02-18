@@ -11,9 +11,16 @@
     <link rel="stylesheet" href="{% static 'all.css' %}">
     <title>Event Details</title>
     <style>
+        body {
+       
+          
+           
+            min-height: 100vh;
+            margin: 0;
+        }
         /* Add your CSS styles here */
         .event-container {
-            margin: 20px auto;
+            margin: 60px auto;
             width: 80%;
             border: 1px solid #ccc;
             padding: 20px;
@@ -51,8 +58,27 @@
     </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Logout</a></li>
+                <li><a href="{% url 'buy' %}">BUY</a></li>
+                <li><a href="{% url 'service' %}">SERVICE</a></li>
+                <li><a href="{% url 'events' %}">EVENTS</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    {% for event in events %}
     <div class="event-container">
-        {% for event in events %}
+        {% if event.event_name ==  eventname %}
+        {% if success_message %}
+        <div class="alert alert-success" role="alert">
+            <h2>{{ success_message }}</h2>
+        </div>
+        {% endif %}
+        {% endif %}
         <div class="event-info">
             <h2>{{ event.event_name }}</h2>
             <p><strong>Event ID:</strong> {{ event.event_id }}</p>
@@ -66,50 +92,46 @@
                 <img src="{{ event.media_1.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
-            
             {% if event.media_2 %}
             <div class="media-item">
-                <img src="{{ event.media_2.url }}" alt="Image 2" style="width: 300px; height: 300px;">
+                <img src="{{ event.media_2.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
-            
             {% if event.media_3 %}
             <div class="media-item">
-                <img src="{{ event.media_3.url }}" alt="Image 3" style="width: 300px; height: 300px;">
+                <img src="{{ event.media_3.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
-            
             {% if event.media_4 %}
             <div class="media-item">
-                <img src="{{ event.media_4.url }}" alt="Image 4" style="width: 300px; height: 300px;">
+                <img src="{{ event.media_4.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
-            
             {% if event.media_5 %}
             <div class="media-item">
-                <img src="{{ event.media_5.url }}" alt="Image 5" style="width: 300px; height: 300px;">
+                <img src="{{ event.media_5.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
-            
             {% if event.media_6 %}
             <div class="media-item">
-                <img src="{{ event.media_6.url }}" alt="Image 6" style="width: 300px; height: 300px;">
+                <img src="{{ event.media_6.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
-            
             {% if event.media_7 %}
             <div class="media-item">
-                <img src="{{ event.media_7.url }}" alt="Image 7" style="width: 300px; height: 300px;">
+                <img src="{{ event.media_7.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
-            
             {% if event.media_8 %}
             <div class="media-item">
-                <img src="{{ event.media_8.url }}" alt="Image 8" style="width: 300px; height: 300px;">
+                <img src="{{ event.media_8.url }}" alt="Image 1" style="width: 300px; height: 300px;">
             </div>
             {% endif %}
+  
+
             
-            <!-- Repeat for media_3 to media_8 -->
+            <!-- Repeat for media_2 to media_8 -->
+            
             {% if event.video %}
             <div class="media-item">
                 <video controls style="width: 600px; height: 600px;">
@@ -119,7 +141,32 @@
             </div>
             {% endif %}
         </div>
-        {% endfor %}
+
+        <!-- Form for capturing attendee information -->
+        <form method="post" action="{% url 'events' %}">
+            {% csrf_token %}
+            <input type="hidden" name="event_name" value="{{ event.event_name }}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="mb-3">
+                <input type="hidden" name="event" id="event" value="{{ event.event_name }}">
+                <input type="hidden" name="eventta" id="event" value="{{ event.event_total_attendees }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        
+       
     </div>
+    {% endfor %}
 </body>
 </html>

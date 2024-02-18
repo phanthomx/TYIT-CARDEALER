@@ -3,13 +3,14 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 from cloudinary_storage.storage import MediaCloudinaryStorage, RawMediaCloudinaryStorage, VideoMediaCloudinaryStorage
 from cloudinary_storage.validators import validate_video
-from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
+
 
 class Customer(models.Model):
   name = models.CharField(max_length=20)
-  Email = models.CharField(max_length=50)
+  Email = models.CharField(max_length=50, primary_key=True, unique=True)
   password = models.CharField(max_length=20)
     
 
@@ -22,7 +23,7 @@ class Customer(models.Model):
 
 class Employee(models.Model):
   Empname = models.CharField(max_length=20)
-  Empemail = models.CharField(max_length=50)
+  Empemail = models.CharField(max_length=50, primary_key=True, unique=True)
   Emppassword = models.CharField(max_length=20)
   
   USERNAME_FIELD = 'Empemail'
@@ -71,3 +72,15 @@ class Event(models.Model):
 def delete_past_events(sender, instance, **kwargs):
     if instance.date_time < timezone.now():
         instance.delete()
+        
+        
+class Attendee(models.Model):
+    # Define fields to store attendee information
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    event = models.CharField(max_length=200)
+    registration_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

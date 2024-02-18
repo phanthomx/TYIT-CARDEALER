@@ -23,6 +23,7 @@ urlpatterns = [
     path('event/', views.events, name= 'events'),
     path('servicereq/', views.servicereq, name= 'servicereq'),
     path('getservice/', views.getservice, name= 'getservice'),
+    path('getevent/', views.getevent, name= 'getevent'),
     
 
 
