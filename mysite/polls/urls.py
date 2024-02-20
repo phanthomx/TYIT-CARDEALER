@@ -24,6 +24,7 @@ urlpatterns = [
     path('servicereq/', views.servicereq, name= 'servicereq'),
     path('getservice/', views.getservice, name= 'getservice'),
     path('getevent/', views.getevent, name= 'getevent'),
+    path('showcar/', views.showcar, name= 'showcar'),
     
 
 

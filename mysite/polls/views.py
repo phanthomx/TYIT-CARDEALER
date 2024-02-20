@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import connection
 from django.contrib.auth import  authenticate
+from .models import CarModel, CarColor, CarGallery, CarTech, Carvarient, carFuel, carinfo, Generalinfo
+
 
 from datetime import datetime, timedelta, date
 from .models import Customer, Employee, Appointment, Attendee, Event
@@ -32,6 +34,50 @@ def elogin(request):
 def EmpLogin(request):
     return render(request, 'polls/LoginEmp.html')
 def buy(request):
+        carmodel = CarModel.objects.all()
+        # Pass the events to the template for rendering
+
+        return render(request, 'polls/buy.html', {'car_models': carmodel})
+    
+def showcar(request):
+    if request.method == "POST":
+        carname = request.POST.get("car_name")
+       
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM polls_CarModel WHERE name = %s ", [carname])
+        Model = cursor.fetchone()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM polls_CarGallery WHERE car_model_id = %s ", [carname])
+        CarMedia = cursor.fetchone()
+      
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM polls_CarTech WHERE car_model_id = %s ", [carname])
+        Tech = cursor.fetchone()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM polls_Carvarient WHERE car_model_id = %s ", [carname])
+        varients  = cursor.fetchone()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM polls_carFuel WHERE car_model_id = %s ", [carname])
+        fuel = cursor.fetchone()
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM polls_carinfo WHERE car_model_id = %s ", [carname])
+        info = cursor.fetchall()      
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM polls_Generalinfo WHERE car_model_id = %s ", [carname])
+        genfo = cursor.fetchone()
+        print(Model)
+        print(genfo)
+        return render(request, 'polls/car_dtail.html', {
+            'Model_info': Model,
+            'CarMedia': CarMedia,
+            'Tech': Tech,
+            'varients': varients,
+            'fuel': fuel,
+            'info': info,
+            'genfo': genfo,
+        })
+        
+        
     return render(request, 'polls/buy.html')
 def service(request):
     return render(request, 'polls/service.html')

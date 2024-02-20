@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        h2 {
+            margin-top: 30px;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mb-4">
+        <h2>Variants</h2>
+        <ul>
+            <li><strong>Variant 1:</strong> {{ varients.1 }} - {{ varients.2 }} - Price: {{ varients.Var_price_1 }}</li>
+            <li><strong>Variant 2:</strong> {{ varients.Varient_name_2 }} - {{ varients.Varient_desc_2 }} - Price: {{ varients.Var_price_2 }}</li>
+            <li><strong>Variant 3:</strong> {{ varients.Varient_name_3 }} - {{ varients.Varient_desc_3 }} - Price: {{ varients.Var_price_3 }}</li>
+            <!-- Add more if needed -->
+        </ul>
+    </div>
+    {% for i in info %}
+    <p>{{ i.1 }}</p>
+    <p>{{ i.2 }}</p>
+    {% endfor %}
+</body>
+</html>
