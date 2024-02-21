@@ -4,8 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Detail</title>
+    <title>Combined Document</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <style>
+        /* Add styles from both documents */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -35,6 +42,34 @@
             padding: 0;
             margin: 0;
         }
+        header {
+            background-color: #007bff;
+            padding: 30px 0;
+
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li:last-child {
+            margin-right: 0;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
         li {
             margin-bottom: 10px;
         }
@@ -43,22 +78,599 @@
             height: auto;
             border-radius: 5px;
         }
+
+        /* Slideshow gallery styles */
+        .mySlides,
+        .mySlides1 {
+            display: none;
+        }
+        .numbertext,
+        .numbertext1 {
+            color: #f2f2f2;
+            font-size: 12px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
+          }
+        .prev,
+        .prev1,
+        .next,
+        .next1 {
+            cursor: pointer;
+            position: absolute;
+            top: 40%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .next,
+        .next1 {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+        .prev:hover,
+        .prev1:hover,
+        .next:hover,
+        .next1:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .row:after,
+        .row1:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .column,
+        .column1 {
+            float: left;
+            width: 16.66%;
+        }
+        .demo,
+        .demo1 {
+            opacity: 0.6;
+        }
+        .active,
+        .demo:hover,
+        .active1,
+        .demo1:hover {
+            opacity: 1;
+        }
+        
+          .slideshow2 {
+              position: relative;
+          }
+      
+          .slideshow2 img {
+              display: block;
+              max-width: 100%;
+          }
+      
+          .color-name {
+              position: absolute;
+              bottom: 10px; /* Adjust as needed */
+              left: 10px; /* Adjust as needed */
+              background-color: rgba(255, 255, 255, 0.7); /* Adjust background color and opacity */
+              padding: 5px;
+              font-size: 14px;
+              color :red;
+          }
+          * {box-sizing: border-box;}
+
+          .Dons {
+            position: relative;
+            width: 100%;
+
+          }
+          
+          #colored {
+            display: block;
+            width: 100%;
+            height: auto;
+          }
+          
+          .layer {
+            position: absolute; 
+            bottom: 0; 
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.5); /* Black see-through */
+            color: #f1f1f1; 
+            width: 100%;
+            transition: .5s ease;
+            opacity:1;
+            color: white;
+            font-size: 20px;
+            padding: 20px;
+            text-align: center;
+          }
+          
+          .Dons:hover .layer {
+            opacity: 1;}
+            
+          select#selected_color,#selected_fuel,#selected_varient {
+              border: 1px solid #ccc;
+              padding: 8px 10px;
+              font-size: 16px;
+              border-radius: 4px;
+              background-color: #b0f6ff;
+              /* Customize appearance here */
+            }
+
+          #colcar{
+            color:white;
+            background-color:lightgrey;
+          }
+          /* Table */
+          #news_table {
+            font-family: Arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+        .car-artwork {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          margin-bottom: 20px;
+      }
+      .car-item {
+          background-color: #f9f9f9;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          padding: 20px;
+          width: calc(33.33% - 20px); /* Adjust the width as needed */
+          margin-bottom: 20px;
+      }
+      .car-type {
+          font-size: 20px;
+          color: #333;
+          margin-bottom: 10px;
+      }
+      .car-desc {
+          font-size: 16px;
+          color: #666;
+          margin-bottom: 10px;
+      }
+      .car-owning {
+          font-size: 16px;
+          color: #888;
+      }
+
     </style>
 </head>
 <body>
-
-    <div class="mb-4">
-        <h2>Variants</h2>
-        <ul>
-            <li><strong>Variant 1:</strong> {{ varients.1 }} - {{ varients.2 }} - Price: {{ varients.Var_price_1 }}</li>
-            <li><strong>Variant 2:</strong> {{ varients.Varient_name_2 }} - {{ varients.Varient_desc_2 }} - Price: {{ varients.Var_price_2 }}</li>
-            <li><strong>Variant 3:</strong> {{ varients.Varient_name_3 }} - {{ varients.Varient_desc_3 }} - Price: {{ varients.Var_price_3 }}</li>
-            <!-- Add more if needed -->
-        </ul>
+    <header>
+        <nav>
+          <ul>
+            <li><a href="{% url 'home' %}">Logout</a></li>
+            <li><a href="{% url 'buy' %}">BUY</a></li>
+            <li><a href="{% url 'service' %}">SERVICE</a></li>
+            <li><a href="{% url 'events' %}">EVENTS</a></li>
+          </ul>
+        </nav>
+      </header>
+      <h1>MODEL</h1>
+      <div style="overflow: hidden;">
+        <div style="float: left; width: 33.33%; background-color: lightgrey;">
+            <h2>Name</h2>
+            <h2>{{ Model_info.name }}</h2>
+        </div>
+        <div style="float: left; width: 33.33%; background-color: lightgrey;">
+            <h2>Starting price</h2>
+            <h2>₹{{ Model_info.min_price }}</h2>
+        </div>
+        <div style="float: left; width: 33.33%; background-color: lightgrey;">
+            <h2>Mileage</h2>
+            <h2>{{ Model_info.mileage }}</h2>
+        </div>
     </div>
-    {% for i in info %}
-    <p>{{ i.1 }}</p>
-    <p>{{ i.2 }}</p>
-    {% endfor %}
+
+        <h1> EXTERIOR</h1>
+        <div class="mySlides">
+          <div class="numbertext">1 / 8</div>
+          <img src="{{ CarMedia.Exterior_1.url }}" style="width:100%">
+        </div>
+      
+        <div class="mySlides">
+          <div class="numbertext">2 / 8</div>
+          <img src="{{ CarMedia.Exterior_2.url }}" style="width:100%">
+        </div>
+      
+        <div class="mySlides">
+          <div class="numbertext">3 / 8</div>
+          <img src="{{ CarMedia.Exterior_3.url }}" style="width:100%">
+        </div>
+          
+        <div class="mySlides">
+          <div class="numbertext">4 / 8</div>
+          <img src="{{ CarMedia.Exterior_4.url }}" style="width:100%">
+        </div>
+      
+        <div class="mySlides">
+          <div class="numbertext">5 / 8</div>
+          <img src="{{ CarMedia.Exterior_5.url }}" style="width:100%">
+        </div>
+          
+        <div class="mySlides">
+          <div class="numbertext">6/ 8</div>
+          <img src="{{ CarMedia.Exterior_6.url }}" style="width:100%">
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">7 / 8</div>
+            <img src="{{ CarMedia.Exterior_7.url }}" style="width:100%">
+        </div>
+        <div class="mySlides">
+            <div class="numbertext">8 / 8</div>
+            <img src="{{ CarMedia.Exterior_8.url }}" style="width:100%">
+        </div>
+          
+        <a class="prev" onclick="plusSlides(-1)">❮</a>
+        <a class="next" onclick="plusSlides(1)">❯</a>
+      
+        <div class="caption-container">
+          <p id="caption"></p>
+        </div>
+      
+        <div class="row">
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_1.url }}" style="width:100%" onclick="currentSlide(1)" >
+          </div>
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_2.url }}" style="width:100%" onclick="currentSlide(2)" >
+          </div>
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_3.url }}" style="width:100%" onclick="currentSlide(3)" >
+          </div>
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_4.url }}" style="width:100%" onclick="currentSlide(4)" >
+          </div>
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_5.url }}" style="width:100%" onclick="currentSlide(5)">
+          </div>    
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_6.url }}" style="width:100%" onclick="currentSlide(6)">
+          </div>
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_7.url }}" style="width:100%" onclick="currentSlide(7)">
+          </div>
+          <div class="column">
+            <img class="demo cursor" src="{{ CarMedia.Exterior_8.url }}" style="width:100%" onclick="currentSlide(8)" >
+          </div>
+        </div>
+      </div><br><br>
+      <br>
+
+    <h1>INTERIOR</h1>
+    <div class="slideshow1">
+        <div><img src="{{ CarMedia.Interior_1.url }}" alt="Product 1"></div>
+        <div><img src="{{ CarMedia.Interior_2.url }}" alt="Product 2"></div>
+        <div><img src="{{ CarMedia.Interior_3.url }}" alt="Product 3"></div>
+        <div><img src="{{ CarMedia.Interior_4.url }}" alt="Product 4"></div>
+        <div><img src="{{ CarMedia.Interior_5.url }}" alt="Product 5"></div>
+        <div><img src="{{ CarMedia.Interior_6.url }}" alt="Product 6"></div>
+        <div><img src="{{ CarMedia.Interior_7.url }}" alt="Product 7"></div>
+        <div><img src="{{ CarMedia.Interior_8.url }}" alt="Product 8"></div>
+        <!-- Add more images as needed -->
+      </div>
+      <h1>AVAILABLE COLORS</h1>
+      <div class="slideshow2">
+        <div>
+          <div class="Dons">
+            <img  id ="colored" src="{{ colors.colorpic1.url }}" alt="Avatar" class="image">
+            <div class="layer">{{ colors.colorname1 }}</div>
+          </div>
+        </div>
+        <div>
+          <div class="Dons">
+            <img  id ="colored" src="{{ colors.colorpic2.url }}" alt="Avatar" class="image">
+            <div class="layer">{{ colors.colorname2 }}</div>
+          </div>
+        </div>
+        <div>
+          <div class="Dons">
+            <img  id ="colored" src="{{ colors.colorpic3.url }}" alt="Avatar" class="image">
+            <div class="layer">{{ colors.colorname3 }}</div>
+          </div>
+        </div>
+      <div>
+        <div class="Dons">
+          <img  id ="colored" src="{{ colors.colorpic4.url }}" alt="Avatar" class="image">
+          <div class="layer">{{ colors.colorname4 }}</div>
+        </div>
+      </div>
+      <div>
+        <div class="Dons">
+          <img  id ="colored" src="{{ colors.colorpic5.url }}" alt="Avatar" class="image">
+          <div class="layer">{{ colors.colorname5 }}</div>
+        </div>
+      </div>
+    <div>
+      <div class="Dons">
+        <img  id ="colored" src="{{ colors.colorpic6.url }}" alt="Avatar" class="image">
+        <div class="layer">{{ colors.colorname6 }}</div>
+      </div>
+    </div>
+        <!-- Add more images and corresponding color names as needed -->
+    </div>
+<div id="colcar">
+  <h2><label for="selected_color">Choose a car color:</label></h2>
+<select id="selected_color">
+  <option id="selcar" value="{{ colors.colorname1 }}">{{ colors.colorname1 }}</option>
+  <option id="selcar" value="{{ colors.colorname2 }}">{{ colors.colorname2 }}</option>
+  <option id="selcar" value="{{ colors.colorname3 }}">{{ colors.colorname3 }}</option>
+  <option id="selcar" value="{{ colors.colorname4 }}">{{ colors.colorname4 }}</option>
+  <option id="selcar" value="{{ colors.colorname5 }}">{{ colors.colorname5 }}</option>
+  <option id="selcar" value="{{ colors.colorname6 }}">{{ colors.colorname6 }}</option>
+</select>
+</div>
+<h1>TECHNOLOGY</h1>
+      <div class="slideshow2">
+        <div>
+          <div class="Dons">
+            <img  id ="colored" src="{{ Tech.Tech_pic1.url }}" alt="Avatar" class="image">
+            <div class="layer">{{ Tech.Tech_name1 }}---{{ Tech.Tech_desc_1 }}</div>
+         
+          </div>
+        </div>
+        <div>
+          <div class="Dons">
+            <img  id ="colored" src="{{ Tech.Tech_pic2.url }}" alt="Avatar" class="image">
+            <div class="layer">{{ Tech.Tech_name2 }}---{{ Tech.Tech_desc_2 }}</div>
+          </div>
+        </div>
+        <div>
+          <div class="Dons">
+            <img  id ="colored" src="{{ Tech.Tech_pic3.url }}" alt="Avatar" class="image">
+            <div class="layer">{{ Tech.Tech_name3 }}---{{ Tech.Tech_desc_3 }}</div>
+          </div>
+        </div>
+      <div>
+        <div class="Dons">
+          <img  id ="colored" src="{{ Tech.Tech_pic4.url }}" alt="Avatar" class="image">
+          <div class="layer">{{ Tech.Tech_name4 }}---{{ Tech.Tech_desc_4 }}</div>
+        </div>
+      </div>
+      <div>
+        <div class="Dons">
+          <img  id ="colored" src="{{ Tech.Tech_pic5.url }}" alt="Avatar" class="image">
+          <div class="layer">{{ Tech.Tech_name5 }}---{{ Tech.Tech_desc_5 }}</div>
+        </div>
+      </div>
+
+        <!-- Add more images and corresponding color names as needed -->
+    </div>
+    <h1>SELECT VARIENT</h1>
+
+    <table id="news_table">
+
+      <tr>
+        <td id="row1_cell2">{{ varients.Varient_name_1 }}</td>
+        <td id="row1_cell3">{{ varients.Varient_desc_1 }}</td>
+        <td id="row1_cell4">+{{ varients.Var_price_1 }}</td>
+      </tr>
+      <tr>
+        <td id="row1_cell2">{{ varients.Varient_name_2 }}</td>
+        <td id="row1_cell3">{{ varients.Varient_desc_2 }}</td>
+        <td id="row1_cell4">+{{ varients.Var_price_2 }}</td>
+      </tr>
+      <tr>
+        <td id="row2_cell2">{{ varients.Varient_name_3 }}</td>
+        <td id="row2_cell3">{{ varients.Varient_desc_3 }}</td>
+        <td id="row2_cell4">+{{ varients.Var_price_3 }}</td>
+      </tr>
+      <tr>
+        <td id="row3_cell2">{{ varients.Varient_name_4 }}</td>
+        <td id="row3_cell3">{{ varients.Varient_desc_4 }}</td>
+        <td id="row3_cell4">+{{ varients.Var_price_4 }}</td>
+      </tr>
+      <tr>
+        <td id="row4_cell2">{{ varients.Varient_name_5 }}</td>
+        <td id="row4_cell3">{{ varients.Varient_desc_5 }}</td>
+        <td id="row4_cell4">+{{ varients.Var_price_5 }}</td>
+      </tr>
+
+    </table>
+    <select id="selected_varient">
+      <option id="selcar" value="{{ varients.Varient_name_1 }}|{{ varients.Var_price_1 }}">{{ varients.Varient_name_1 }}</option>
+      <option id="selcar" value="{{ varients.Varient_name_2 }}|{{ varients.Var_price_2 }}">{{ varients.Varient_name_2 }}</option>
+      <option id="selcar" value="{{ varients.Varient_name_3 }}|{{ varients.Var_price_3 }}">{{ varients.Varient_name_3 }}</option>
+      <option id="selcar" value="{{ varients.Varient_name_4 }}|{{ varients.Var_price_4 }}">{{ varients.Varient_name_4 }}</option>
+      <option id="selcar" value="{{ varients.Varient_name_5 }}|{{ varients.Var_price_5 }}">{{ varients.Varient_name_5 }}</option>
+      <option id="selcar" value="{{ varients.Varient_name_6 }}|{{ varients.Var_price_6 }}">{{ varients.Varient_name_6 }}</option>
+    </select>
+
+    <table id="news_table">
+
+      <tr>
+        <td id="row1_cell2">{{ fuel.Fuel_type_1 }}</td>
+        <td id="row1_cell3">+{{ fuel.Fuel_price_1 }}</td>
+        
+      </tr>
+      <tr>
+        <td id="row1_cell2">{{ fuel.Fuel_type_2 }}</td>
+        <td id="row1_cell3">+{{ fuel.Fuel_price_2 }}</td>
+        
+      </tr>
+      <tr>
+        <td id="row2_cell2">{{ fuel.Fuel_type_3 }}</td>
+        <td id="row2_cell3">+{{ fuel.Fuel_price_3 }}</td>
+        
+      </tr>
+      <tr>
+        <td id="row3_cell2">{{ fuel.Fuel_type_4 }}</td>
+        <td id="row3_cell3">+{{ fuel.Fuel_price_4 }}</td>
+        
+      </tr>
+      <tr>
+        <td id="row4_cell2">{{ fuel.Fuel_type_5 }}</td>
+        <td id="row4_cell3">+{{ fuel.Fuel_price_5 }}</td>
+        
+      </tr>
+
+    </table>
+      <select id="selected_fuel">
+        <option id="selcar" value="{{ fuel.Fuel_type_1 }}|{{ fuel.Fuel_price_1 }}">{{ fuel.Fuel_type_1 }}</option>
+        <option id="selcar" value="{{ fuel.Fuel_type_2 }}|{{ fuel.Fuel_price_2 }}">{{ fuel.Fuel_type_2 }}</option>
+        <option id="selcar" value="{{ fuel.Fuel_type_3 }}|{{ fuel.Fuel_price_3 }}">{{ fuel.Fuel_type_3 }}</option>
+        <option id="selcar" value="{{ fuel.Fuel_type_4 }}|{{ fuel.Fuel_price_4 }}">{{ fuel.Fuel_type_4 }}</option>
+        <option id="selcar" value="{{ fuel.Fuel_type_5 }}|{{ fuel.Fuel_price_5 }}">{{ fuel.Fuel_type_5 }}</option>
+        <option id="selcar" value="{{ fuel.Fuel_type_6 }}|{{ fuel.Fuel_price_6 }}">{{ fuel.Fuel_type_6 }}</option>
+      </select>
+
+<div class="car-artwork">
+  {% for i in info %}
+    <div class="car-item">
+      <h2 class="car-type">{{ i.car_type }}</h2>
+      <p class="car-desc"><strong>Description:</strong> {{ i.car_desc }}</p>
+      <p class="car-owning"><strong>Owning:</strong> {{ i.owning }}</p>
+    </div>
+  {% endfor %}
+
+  <div class="car-item">
+    <h2 class="car-type">Max price: {{ genfo.max_price }}</h2>
+    <p class="car-desc"><strong>Booking Cost:</strong> {{ genfo.booking_cost }}</p>
+    <p class="car-owning"><strong>Approx Delivery Time:</strong> {{ genfo.delivery_time }}</p>
+    <p class="car-owning"><strong>EMI:</strong> {{ genfo.emi }}</p>
+  </div>
+</div>
+
+<div id="selected_values">
+  <h2>Selected Values</h2>
+  <p id="color_selected">Color: </p>
+  <p id="variant_selected">Variant: </p>
+  <p id="fuel_selected">Fuel Type: </p>
+</div>
+<div id="selected_values">
+  <h2>Total Price</h2>
+  <p id="total_price"></p>
+</div>
+
+
+    <script>
+
+      
+      
+      const selectedColor = document.getElementById('selected_color');
+const selectedVariant = document.getElementById('selected_varient');
+const selectedFuel = document.getElementById('selected_fuel');
+const colorSelected = document.getElementById('color_selected');
+const variantSelected = document.getElementById('variant_selected');
+const fuelSelected = document.getElementById('fuel_selected');
+const totalPriceElement = document.getElementById('total_price');
+const basePrice = parseFloat('{{ Model_info.min_price }}');
+
+// Add event listeners to the select elements to update the displayed values when a selection is made
+selectedColor.addEventListener('change', function() {
+  colorSelected.textContent = 'Color: ' + this.value;
+});
+
+selectedVariant.addEventListener('change', function() {
+  const selectedOption = this.value.split('|');
+  const VarientType = selectedOption[0];
+  const VarientPrice = parseFloat(selectedOption[1]);
+  variantSelected.textContent = 'Variant: ' + VarientType;
+  console.log('Varient Type:', VarientType);
+  console.log('Varient Price:', VarientPrice);
+
+  updateTotalPrice();
+});
+
+selectedFuel.addEventListener('change', function() {
+  const selectedOption = this.value.split('|');
+  const fuelType = selectedOption[0];
+  const fuelPrice = parseFloat(selectedOption[1]);
+  fuelSelected.textContent = 'Fuel Type: ' + fuelType;
+  console.log('Fuel Type:', fuelType);
+  console.log('Fuel Price:', fuelPrice);
+
+  updateTotalPrice();
+});
+
+function updateTotalPrice() {
+  const selectedVariantOption = selectedVariant.value.split('|');
+  const selectedFuelOption = selectedFuel.value.split('|');
+
+  const variantPrice = parseFloat(selectedVariantOption[1]);
+  const fuelPrice = parseFloat(selectedFuelOption[1]);
+
+  const totalPrice = basePrice + variantPrice + fuelPrice;
+
+  totalPriceElement.textContent = 'Total Price: ₹' + totalPrice.toFixed(2);
+}
+
+    
+   
+      {% comment %} const totprice = basePrice + fuelPrice +VarientPrice; {% endcomment %}
+
+
+        $(document).ready(function(){
+            $('.slideshow1').slick({
+              autoplay: true, // Auto play slides
+              autoplaySpeed: 2000, // Slide display duration in milliseconds
+              dots: true, // Show dots navigation
+              arrows: true // Show arrow navigation
+            });
+          });
+          $(document).ready(function(){
+            $('.slideshow2').slick({
+              autoplay: true, // Auto play slides
+              autoplaySpeed: 2000, // Slide display duration in milliseconds
+              dots: true, // Show dots navigation
+              arrows: true // Show arrow navigation
+            });
+          });
+
+
+        let slideIndex = 1;
+        showSlides(slideIndex);
+    
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+    
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+    
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("demo");
+            let captionText = document.getElementById("caption");
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex-1].style.display = "block";
+            dots[slideIndex-1].className += " active";
+            captionText.innerHTML = dots[slideIndex-1].alt;
+        }
+
+    
+
+    </script>
+    
 </body>
-</html>
+</html> 

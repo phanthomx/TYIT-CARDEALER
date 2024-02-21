@@ -43,38 +43,47 @@ def showcar(request):
     if request.method == "POST":
         carname = request.POST.get("car_name")
        
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM polls_CarModel WHERE name = %s ", [carname])
-        Model = cursor.fetchone()
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM polls_CarGallery WHERE car_model_id = %s ", [carname])
-        CarMedia = cursor.fetchone()
+        # cursor = connection.cursor()
+        # cursor.execute("SELECT * FROM polls_CarModel WHERE name = %s ", [carname])
+        # Model = cursor.fetchone()
+        # cursor = connection.cursor()
+        # cursor.execute("SELECT * FROM polls_CarGallery WHERE car_model_id = %s ", [carname])
+        # CarMedia = cursor.fetchone()
       
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM polls_CarTech WHERE car_model_id = %s ", [carname])
-        Tech = cursor.fetchone()
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM polls_Carvarient WHERE car_model_id = %s ", [carname])
-        varients  = cursor.fetchone()
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM polls_carFuel WHERE car_model_id = %s ", [carname])
-        fuel = cursor.fetchone()
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM polls_carinfo WHERE car_model_id = %s ", [carname])
-        info = cursor.fetchall()      
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM polls_Generalinfo WHERE car_model_id = %s ", [carname])
-        genfo = cursor.fetchone()
-        print(Model)
-        print(genfo)
+        # cursor = connection.cursor()
+        # cursor.execute("SELECT * FROM polls_CarTech WHERE car_model_id = %s ", [carname])
+        # Tech = cursor.fetchone()
+        # cursor = connection.cursor()
+        # cursor.execute("SELECT * FROM polls_Carvarient WHERE car_model_id = %s ", [carname])
+        # varients  = cursor.fetchone()
+        # cursor = connection.cursor()
+        # cursor.execute("SELECT * FROM polls_carFuel WHERE car_model_id = %s ", [carname])
+        # fuel = cursor.fetchone()
+        # cursor = connection.cursor()
+        # cursor.execute("SELECT * FROM polls_carinfo WHERE car_model_id = %s ", [carname])
+        # info = cursor.fetchall()      
+        # cursor = connection.cursor()
+        # cursor.execute("SELECT * FROM polls_Generalinfo WHERE car_model_id = %s ", [carname])
+        # genfo = cursor.fetchone()
+        model = CarModel.objects.get(name=carname)
+        car_media = CarGallery.objects.filter(car_model=model).first()
+        tech = CarTech.objects.filter(car_model=model).first()
+        color = CarColor.objects.filter(car_model=model).first()
+        varients = Carvarient.objects.filter(car_model=model).first()
+        fuel = carFuel.objects.filter(car_model=model).first()
+        info = carinfo.objects.filter(car_model=model).all()
+        genfo = Generalinfo.objects.filter(car_model=model).first()
+       
+
         return render(request, 'polls/car_dtail.html', {
-            'Model_info': Model,
-            'CarMedia': CarMedia,
-            'Tech': Tech,
+            'Model_info': model,
+            'CarMedia': car_media,
+            'Tech': tech,
             'varients': varients,
             'fuel': fuel,
             'info': info,
             'genfo': genfo,
+            'colors':color
         })
         
         
