@@ -253,6 +253,25 @@
           font-size: 16px;
           color: #888;
       }
+      .checkout-btn {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+      
+      .checkout-btn:hover {
+        background-color: #45a049; /* Darker green on hover */
+      }
+      
 
     </style>
 </head>
@@ -283,256 +302,108 @@
         </div>
     </div>
 
-        <h1> EXTERIOR</h1>
+
+    <h1> EXTERIOR</h1>
+    <div class="slideshow-container">
+      {% for car_media_ext in CarMedia_Ext %}
         <div class="mySlides">
-          <div class="numbertext">1 / 8</div>
-          <img src="{{ CarMedia.Exterior_1.url }}" style="width:100%">
+          <div class="numbertext">{{ forloop.counter }} / {{ CarMedia_Ext.count }}</div>
+          <img src="{{ car_media_ext.Exterior.url }}" style="width:100%">
         </div>
-      
-        <div class="mySlides">
-          <div class="numbertext">2 / 8</div>
-          <img src="{{ CarMedia.Exterior_2.url }}" style="width:100%">
-        </div>
-      
-        <div class="mySlides">
-          <div class="numbertext">3 / 8</div>
-          <img src="{{ CarMedia.Exterior_3.url }}" style="width:100%">
-        </div>
-          
-        <div class="mySlides">
-          <div class="numbertext">4 / 8</div>
-          <img src="{{ CarMedia.Exterior_4.url }}" style="width:100%">
-        </div>
-      
-        <div class="mySlides">
-          <div class="numbertext">5 / 8</div>
-          <img src="{{ CarMedia.Exterior_5.url }}" style="width:100%">
-        </div>
-          
-        <div class="mySlides">
-          <div class="numbertext">6/ 8</div>
-          <img src="{{ CarMedia.Exterior_6.url }}" style="width:100%">
-        </div>
-        <div class="mySlides">
-            <div class="numbertext">7 / 8</div>
-            <img src="{{ CarMedia.Exterior_7.url }}" style="width:100%">
-        </div>
-        <div class="mySlides">
-            <div class="numbertext">8 / 8</div>
-            <img src="{{ CarMedia.Exterior_8.url }}" style="width:100%">
-        </div>
-          
-        <a class="prev" onclick="plusSlides(-1)">❮</a>
-        <a class="next" onclick="plusSlides(1)">❯</a>
-      
-        <div class="caption-container">
-          <p id="caption"></p>
-        </div>
-      
-        <div class="row">
+      {% endfor %}
+    
+      <a class="prev" onclick="plusSlides(-1)">❮</a>
+      <a class="next" onclick="plusSlides(1)">❯</a>
+    
+      <div class="caption-container">
+        <p id="caption"></p>
+      </div>
+    
+      <div class="row">
+        {% for i in CarMedia_Ext %}
           <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_1.url }}" style="width:100%" onclick="currentSlide(1)" >
+            <img class="demo cursor" src="{{ i.Exterior.url }}" style="width:100%" onclick="currentSlide({{ forloop.counter }})">
           </div>
-          <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_2.url }}" style="width:100%" onclick="currentSlide(2)" >
-          </div>
-          <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_3.url }}" style="width:100%" onclick="currentSlide(3)" >
-          </div>
-          <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_4.url }}" style="width:100%" onclick="currentSlide(4)" >
-          </div>
-          <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_5.url }}" style="width:100%" onclick="currentSlide(5)">
-          </div>    
-          <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_6.url }}" style="width:100%" onclick="currentSlide(6)">
-          </div>
-          <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_7.url }}" style="width:100%" onclick="currentSlide(7)">
-          </div>
-          <div class="column">
-            <img class="demo cursor" src="{{ CarMedia.Exterior_8.url }}" style="width:100%" onclick="currentSlide(8)" >
-          </div>
-        </div>
-      </div><br><br>
-      <br>
+        {% endfor %}
+      </div>
+    </div>
+    
 
     <h1>INTERIOR</h1>
     <div class="slideshow1">
-        <div><img src="{{ CarMedia.Interior_1.url }}" alt="Product 1"></div>
-        <div><img src="{{ CarMedia.Interior_2.url }}" alt="Product 2"></div>
-        <div><img src="{{ CarMedia.Interior_3.url }}" alt="Product 3"></div>
-        <div><img src="{{ CarMedia.Interior_4.url }}" alt="Product 4"></div>
-        <div><img src="{{ CarMedia.Interior_5.url }}" alt="Product 5"></div>
-        <div><img src="{{ CarMedia.Interior_6.url }}" alt="Product 6"></div>
-        <div><img src="{{ CarMedia.Interior_7.url }}" alt="Product 7"></div>
-        <div><img src="{{ CarMedia.Interior_8.url }}" alt="Product 8"></div>
-        <!-- Add more images as needed -->
+      {% for media in CarMedia_Int %}
+      <img src="{{ media.Interior.url }}" alt="Car Interior">
+      {% endfor %}
+
+    </div>
+
       </div>
       <h1>AVAILABLE COLORS</h1>
       <div class="slideshow2">
-        <div>
-          <div class="Dons">
-            <img  id ="colored" src="{{ colors.colorpic1.url }}" alt="Avatar" class="image">
-            <div class="layer">{{ colors.colorname1 }}</div>
+        {% for color in colors %}
+          <div>
+            <div class="Dons">
+              <img id="colored" src="{{ color.colorpic.url }}" alt="{{ color.colorname }}" class="image">
+              <div class="layer">{{ color.colorname }}</div>
+            </div>
           </div>
-        </div>
-        <div>
-          <div class="Dons">
-            <img  id ="colored" src="{{ colors.colorpic2.url }}" alt="Avatar" class="image">
-            <div class="layer">{{ colors.colorname2 }}</div>
-          </div>
-        </div>
-        <div>
-          <div class="Dons">
-            <img  id ="colored" src="{{ colors.colorpic3.url }}" alt="Avatar" class="image">
-            <div class="layer">{{ colors.colorname3 }}</div>
-          </div>
-        </div>
-      <div>
-        <div class="Dons">
-          <img  id ="colored" src="{{ colors.colorpic4.url }}" alt="Avatar" class="image">
-          <div class="layer">{{ colors.colorname4 }}</div>
-        </div>
+        {% endfor %}
       </div>
-      <div>
-        <div class="Dons">
-          <img  id ="colored" src="{{ colors.colorpic5.url }}" alt="Avatar" class="image">
-          <div class="layer">{{ colors.colorname5 }}</div>
-        </div>
-      </div>
-    <div>
-      <div class="Dons">
-        <img  id ="colored" src="{{ colors.colorpic6.url }}" alt="Avatar" class="image">
-        <div class="layer">{{ colors.colorname6 }}</div>
-      </div>
-    </div>
-        <!-- Add more images and corresponding color names as needed -->
-    </div>
+      
 <div id="colcar">
   <h2><label for="selected_color">Choose a car color:</label></h2>
 <select id="selected_color">
-  <option id="selcar" value="{{ colors.colorname1 }}">{{ colors.colorname1 }}</option>
-  <option id="selcar" value="{{ colors.colorname2 }}">{{ colors.colorname2 }}</option>
-  <option id="selcar" value="{{ colors.colorname3 }}">{{ colors.colorname3 }}</option>
-  <option id="selcar" value="{{ colors.colorname4 }}">{{ colors.colorname4 }}</option>
-  <option id="selcar" value="{{ colors.colorname5 }}">{{ colors.colorname5 }}</option>
-  <option id="selcar" value="{{ colors.colorname6 }}">{{ colors.colorname6 }}</option>
+  {% for color in colors %}
+  <option id="selcar" value="{{ color.colorname }}">{{ color.colorname }}</option>
+ 
+  {% endfor %}
 </select>
 </div>
 <h1>TECHNOLOGY</h1>
-      <div class="slideshow2">
-        <div>
-          <div class="Dons">
-            <img  id ="colored" src="{{ Tech.Tech_pic1.url }}" alt="Avatar" class="image">
-            <div class="layer">{{ Tech.Tech_name1 }}---{{ Tech.Tech_desc_1 }}</div>
-         
-          </div>
-        </div>
-        <div>
-          <div class="Dons">
-            <img  id ="colored" src="{{ Tech.Tech_pic2.url }}" alt="Avatar" class="image">
-            <div class="layer">{{ Tech.Tech_name2 }}---{{ Tech.Tech_desc_2 }}</div>
-          </div>
-        </div>
-        <div>
-          <div class="Dons">
-            <img  id ="colored" src="{{ Tech.Tech_pic3.url }}" alt="Avatar" class="image">
-            <div class="layer">{{ Tech.Tech_name3 }}---{{ Tech.Tech_desc_3 }}</div>
-          </div>
-        </div>
-      <div>
-        <div class="Dons">
-          <img  id ="colored" src="{{ Tech.Tech_pic4.url }}" alt="Avatar" class="image">
-          <div class="layer">{{ Tech.Tech_name4 }}---{{ Tech.Tech_desc_4 }}</div>
-        </div>
+<div class="slideshow2">
+  {% for tec in Tech %}
+    <div>
+      <div class="Dons">
+        <img id="colored" src="{{ tec.Tech_pic.url }}" alt="{{ tec.Tech_name }}" class="image">
+        <div class="layer">{{ tec.Tech_name }}-{{ tec.Tech_desc }}</div>
       </div>
-      <div>
-        <div class="Dons">
-          <img  id ="colored" src="{{ Tech.Tech_pic5.url }}" alt="Avatar" class="image">
-          <div class="layer">{{ Tech.Tech_name5 }}---{{ Tech.Tech_desc_5 }}</div>
-        </div>
-      </div>
-
-        <!-- Add more images and corresponding color names as needed -->
     </div>
+  {% endfor %}
+</div>
+     
     <h1>SELECT VARIENT</h1>
 
     <table id="news_table">
-
+     {% for varient in varients %}
       <tr>
-        <td id="row1_cell2">{{ varients.Varient_name_1 }}</td>
-        <td id="row1_cell3">{{ varients.Varient_desc_1 }}</td>
-        <td id="row1_cell4">+{{ varients.Var_price_1 }}</td>
+        <td id="row1_cell2">{{ varient.Varient_name }}</td>
+        <td id="row1_cell3">{{ varient.Varient_desc }}</td>
+        <td id="row1_cell4">+{{ varient.Var_price }}</td>
       </tr>
-      <tr>
-        <td id="row1_cell2">{{ varients.Varient_name_2 }}</td>
-        <td id="row1_cell3">{{ varients.Varient_desc_2 }}</td>
-        <td id="row1_cell4">+{{ varients.Var_price_2 }}</td>
-      </tr>
-      <tr>
-        <td id="row2_cell2">{{ varients.Varient_name_3 }}</td>
-        <td id="row2_cell3">{{ varients.Varient_desc_3 }}</td>
-        <td id="row2_cell4">+{{ varients.Var_price_3 }}</td>
-      </tr>
-      <tr>
-        <td id="row3_cell2">{{ varients.Varient_name_4 }}</td>
-        <td id="row3_cell3">{{ varients.Varient_desc_4 }}</td>
-        <td id="row3_cell4">+{{ varients.Var_price_4 }}</td>
-      </tr>
-      <tr>
-        <td id="row4_cell2">{{ varients.Varient_name_5 }}</td>
-        <td id="row4_cell3">{{ varients.Varient_desc_5 }}</td>
-        <td id="row4_cell4">+{{ varients.Var_price_5 }}</td>
-      </tr>
+{% endfor %}
 
     </table>
     <select id="selected_varient">
-      <option id="selcar" value="{{ varients.Varient_name_1 }}|{{ varients.Var_price_1 }}">{{ varients.Varient_name_1 }}</option>
-      <option id="selcar" value="{{ varients.Varient_name_2 }}|{{ varients.Var_price_2 }}">{{ varients.Varient_name_2 }}</option>
-      <option id="selcar" value="{{ varients.Varient_name_3 }}|{{ varients.Var_price_3 }}">{{ varients.Varient_name_3 }}</option>
-      <option id="selcar" value="{{ varients.Varient_name_4 }}|{{ varients.Var_price_4 }}">{{ varients.Varient_name_4 }}</option>
-      <option id="selcar" value="{{ varients.Varient_name_5 }}|{{ varients.Var_price_5 }}">{{ varients.Varient_name_5 }}</option>
-      <option id="selcar" value="{{ varients.Varient_name_6 }}|{{ varients.Var_price_6 }}">{{ varients.Varient_name_6 }}</option>
+      {% for varient in varients %}
+      <option id="selcar" value="{{ varient.Varient_name }}|{{ varient.Var_price }}">{{ varient.Varient_name }}</option>      
+      {% endfor %}
     </select>
 
     <table id="news_table">
-
+      {% for f in fuel %}
       <tr>
-        <td id="row1_cell2">{{ fuel.Fuel_type_1 }}</td>
-        <td id="row1_cell3">+{{ fuel.Fuel_price_1 }}</td>
-        
+        <td id="row1_cell2">{{ f.Fuel_type }}</td>
+        <td id="row1_cell3">+{{ f.Fuel_price }}</td>
+        {% endfor %}
       </tr>
-      <tr>
-        <td id="row1_cell2">{{ fuel.Fuel_type_2 }}</td>
-        <td id="row1_cell3">+{{ fuel.Fuel_price_2 }}</td>
-        
-      </tr>
-      <tr>
-        <td id="row2_cell2">{{ fuel.Fuel_type_3 }}</td>
-        <td id="row2_cell3">+{{ fuel.Fuel_price_3 }}</td>
-        
-      </tr>
-      <tr>
-        <td id="row3_cell2">{{ fuel.Fuel_type_4 }}</td>
-        <td id="row3_cell3">+{{ fuel.Fuel_price_4 }}</td>
-        
-      </tr>
-      <tr>
-        <td id="row4_cell2">{{ fuel.Fuel_type_5 }}</td>
-        <td id="row4_cell3">+{{ fuel.Fuel_price_5 }}</td>
-        
-      </tr>
+     
 
     </table>
       <select id="selected_fuel">
-        <option id="selcar" value="{{ fuel.Fuel_type_1 }}|{{ fuel.Fuel_price_1 }}">{{ fuel.Fuel_type_1 }}</option>
-        <option id="selcar" value="{{ fuel.Fuel_type_2 }}|{{ fuel.Fuel_price_2 }}">{{ fuel.Fuel_type_2 }}</option>
-        <option id="selcar" value="{{ fuel.Fuel_type_3 }}|{{ fuel.Fuel_price_3 }}">{{ fuel.Fuel_type_3 }}</option>
-        <option id="selcar" value="{{ fuel.Fuel_type_4 }}|{{ fuel.Fuel_price_4 }}">{{ fuel.Fuel_type_4 }}</option>
-        <option id="selcar" value="{{ fuel.Fuel_type_5 }}|{{ fuel.Fuel_price_5 }}">{{ fuel.Fuel_type_5 }}</option>
-        <option id="selcar" value="{{ fuel.Fuel_type_6 }}|{{ fuel.Fuel_price_6 }}">{{ fuel.Fuel_type_6 }}</option>
+        {% for f in fuel %}
+        <option id="selcar" value="{{ f.Fuel_type }}|{{ f.Fuel_price}}">{{ f.Fuel_type  }}</option>
+
+        {% endfor %}
       </select>
 
 <div class="car-artwork">
@@ -545,10 +416,12 @@
   {% endfor %}
 
   <div class="car-item">
-    <h2 class="car-type">Max price: {{ genfo.max_price }}</h2>
-    <p class="car-desc"><strong>Booking Cost:</strong> {{ genfo.booking_cost }}</p>
-    <p class="car-owning"><strong>Approx Delivery Time:</strong> {{ genfo.delivery_time }}</p>
-    <p class="car-owning"><strong>EMI:</strong> {{ genfo.emi }}</p>
+    {%for gen in genfo%}
+    <h2 class="car-type">Max price: {{ gen.max_price }}</h2>
+    <p class="car-desc"id="booking-cost"><strong>Booking Cost:</strong> {{ gen.booking_cost }}</p>
+    <p class="car-owning"><strong>Approx Delivery Time:</strong> {{ gen.Delivery_time }}</p>
+    <p class="car-owning"><strong>EMI:</strong> {{ gen.emi }}</p>
+    {% endfor %}
   </div>
 </div>
 
@@ -562,13 +435,14 @@
   <h2>Total Price</h2>
   <p id="total_price"></p>
 </div>
+<button  id="checkout"class="checkout-btn">Checkout Now</button>
 
 
-    <script>
 
-      
-      
-      const selectedColor = document.getElementById('selected_color');
+<script>    
+var csrfToken = "{{ csrf_token }}";
+console.log(csrfToken)  
+const selectedColor = document.getElementById('selected_color');
 const selectedVariant = document.getElementById('selected_varient');
 const selectedFuel = document.getElementById('selected_fuel');
 const colorSelected = document.getElementById('color_selected');
@@ -576,6 +450,10 @@ const variantSelected = document.getElementById('variant_selected');
 const fuelSelected = document.getElementById('fuel_selected');
 const totalPriceElement = document.getElementById('total_price');
 const basePrice = parseFloat('{{ Model_info.min_price }}');
+const bookingAmount = parseFloat('{{ genfo.0.booking_cost }}');
+console.log("-------");
+console.log(bookingAmount)
+
 
 // Add event listeners to the select elements to update the displayed values when a selection is made
 selectedColor.addEventListener('change', function() {
@@ -591,7 +469,9 @@ selectedVariant.addEventListener('change', function() {
   console.log('Varient Price:', VarientPrice);
 
   updateTotalPrice();
+
 });
+
 
 selectedFuel.addEventListener('change', function() {
   const selectedOption = this.value.split('|');
@@ -602,6 +482,7 @@ selectedFuel.addEventListener('change', function() {
   console.log('Fuel Price:', fuelPrice);
 
   updateTotalPrice();
+
 });
 
 function updateTotalPrice() {
@@ -615,10 +496,65 @@ function updateTotalPrice() {
 
   totalPriceElement.textContent = 'Total Price: ₹' + totalPrice.toFixed(2);
 }
+// Function to send data via AJAX
+function sendDataViaAjax() {
+  // Extracting selected options from the select elements
+  const selectedColorValue = selectedColor.value;
+  const selectedVariantValue = selectedVariant.value;
+  const selectedFuelValue = selectedFuel.value;
 
-    
-   
-      {% comment %} const totprice = basePrice + fuelPrice +VarientPrice; {% endcomment %}
+  // Extracting variant type and fuel type from selected options
+  const selectedVariantOption = selectedVariantValue.split('|');
+  const selectedFuelOption = selectedFuelValue.split('|');
+
+  const variantType = selectedVariantOption[0];
+  const fuelType = selectedFuelOption[0];
+
+  // Extracting booking amount from somewhere in your code
+  const bookingAmount = parseFloat('{{ genfo.0.booking_cost }}');
+  console.log("-------");
+  console.log(bookingAmount)
+  // Total price calculation
+  const variantPrice = parseFloat(selectedVariantOption[1]);
+  const fuelPrice = parseFloat(selectedFuelOption[1]);
+  const totalPrice = basePrice + variantPrice + fuelPrice;
+
+  // Model name extraction
+  const modelName = '{{ Model_info.name }}';
+
+  // AJAX request to send data to the server
+  $.ajax({
+    type: 'POST',
+    url: '/orderinfo/', 
+    headers: { "X-CSRFToken": csrfToken },// Replace with your server endpoint
+    data: {
+      totalPrice: totalPrice,
+      fuelType: fuelType,
+      colorVariant: selectedColorValue,
+      variantType: variantType,
+      modelName: modelName,
+      bookingAmount: bookingAmount,
+      
+    },
+    dataType: "json",
+    success: function(response) {
+      console.log(response)
+      window.location.href = response.redirect_url;
+
+
+    },
+    error: function(xhr, status, error) {
+      // Handle error if any
+      console.error('Error sending data: ', error);
+    }
+  });
+}
+
+// Event listener for the Checkout Now button
+document.getElementById('checkout').addEventListener('click', function() {
+  // Call the function to send data via AJAX
+  sendDataViaAjax();
+});
 
 
         $(document).ready(function(){

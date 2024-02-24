@@ -11,12 +11,14 @@ admin.site.register(Attendee)
    
 
 from django.contrib import admin
-from .models import CarModel, CarColor, CarGallery, CarTech, Carvarient, carFuel, carinfo, Generalinfo
+from .models import CarModel, CarColor,CarGalleryInte,CarGalleryVid, CarGalleryExt, CarTech, Carvarient, carFuel, carinfo, Generalinfo
 
 # Define a custom admin site for cars-related models
 admin.site.register(CarModel)
 admin.site.register(CarColor)
-admin.site.register(CarGallery)
+admin.site.register(CarGalleryInte)
+admin.site.register(CarGalleryVid)
+admin.site.register(CarGalleryExt)
 admin.site.register(CarTech)
 admin.site.register(Carvarient)
 admin.site.register(carFuel)

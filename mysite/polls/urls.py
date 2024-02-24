@@ -25,6 +25,9 @@ urlpatterns = [
     path('getservice/', views.getservice, name= 'getservice'),
     path('getevent/', views.getevent, name= 'getevent'),
     path('showcar/', views.showcar, name= 'showcar'),
+    path('orderinfo/', views.orderinfo, name= 'orderinfo'),
+    path('show_payment/', views.show_payment, name= 'show_payment'),
+    
     
 
 

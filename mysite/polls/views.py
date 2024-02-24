@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db import connection
 from django.contrib.auth import  authenticate
-from .models import CarModel, CarColor, CarGallery, CarTech, Carvarient, carFuel, carinfo, Generalinfo
+from .models import CarModel, CarColor,CarGalleryInte,CarGalleryVid, CarGalleryExt, CarTech, Carvarient, carFuel, carinfo, Generalinfo
 
 
 from datetime import datetime, timedelta, date
@@ -17,6 +17,9 @@ import hashlib
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
+
+
+from urllib.parse import urlencode
 
 
 def polls(request):
@@ -42,49 +45,31 @@ def buy(request):
 def showcar(request):
     if request.method == "POST":
         carname = request.POST.get("car_name")
-       
-        # cursor = connection.cursor()
-        # cursor.execute("SELECT * FROM polls_CarModel WHERE name = %s ", [carname])
-        # Model = cursor.fetchone()
-        # cursor = connection.cursor()
-        # cursor.execute("SELECT * FROM polls_CarGallery WHERE car_model_id = %s ", [carname])
-        # CarMedia = cursor.fetchone()
-      
-        # cursor = connection.cursor()
-        # cursor.execute("SELECT * FROM polls_CarTech WHERE car_model_id = %s ", [carname])
-        # Tech = cursor.fetchone()
-        # cursor = connection.cursor()
-        # cursor.execute("SELECT * FROM polls_Carvarient WHERE car_model_id = %s ", [carname])
-        # varients  = cursor.fetchone()
-        # cursor = connection.cursor()
-        # cursor.execute("SELECT * FROM polls_carFuel WHERE car_model_id = %s ", [carname])
-        # fuel = cursor.fetchone()
-        # cursor = connection.cursor()
-        # cursor.execute("SELECT * FROM polls_carinfo WHERE car_model_id = %s ", [carname])
-        # info = cursor.fetchall()      
-        # cursor = connection.cursor()
-        # cursor.execute("SELECT * FROM polls_Generalinfo WHERE car_model_id = %s ", [carname])
-        # genfo = cursor.fetchone()
         model = CarModel.objects.get(name=carname)
-        car_media = CarGallery.objects.filter(car_model=model).first()
-        tech = CarTech.objects.filter(car_model=model).first()
-        color = CarColor.objects.filter(car_model=model).first()
-        varients = Carvarient.objects.filter(car_model=model).first()
-        fuel = carFuel.objects.filter(car_model=model).first()
+        car_media_Int = CarGalleryInte.objects.filter(car_model=model)
+        car_media_Ext = CarGalleryExt.objects.filter(car_model=model)
+        car_media_Vid = CarGalleryVid.objects.filter(car_model=model)
+        tech = CarTech.objects.filter(car_model=model)
+        color = CarColor.objects.filter(car_model=model)
+        varients = Carvarient.objects.filter(car_model=model)
+        fuel = carFuel.objects.filter(car_model=model)
         info = carinfo.objects.filter(car_model=model).all()
-        genfo = Generalinfo.objects.filter(car_model=model).first()
-       
+        genfo = Generalinfo.objects.filter(car_model=model)
 
+
+        
         return render(request, 'polls/car_dtail.html', {
-            'Model_info': model,
-            'CarMedia': car_media,
-            'Tech': tech,
-            'varients': varients,
-            'fuel': fuel,
-            'info': info,
-            'genfo': genfo,
-            'colors':color
-        })
+    'Model_info': model,
+    'CarMedia_Int': car_media_Int,
+    'CarMedia_Ext': car_media_Ext,
+    'CarMedia_Vid': car_media_Vid,
+    'Tech': tech,
+    'varients': varients,
+    'fuel': fuel,
+    'info': info,
+    'genfo': genfo,
+    'colors': color
+})
         
         
     return render(request, 'polls/buy.html')
@@ -350,3 +335,50 @@ def getevent(request):
         event_list = Event.objects.values_list('event_name', 'date_time').distinct()
 
         return render(request, 'polls/EmpEvents.html', {'events': event_list})
+
+
+import json
+
+def orderinfo(request):
+    
+    if request.method == 'POST':
+        # Access the data sent from the form
+        variant_type = request.POST.get('variantType')
+        fuel_type = request.POST.get('fuelType')
+        color = request.POST.get('colorVariant')
+        booking_price = request.POST.get('bookingAmount')
+        model_name = request.POST.get('modelName')
+        total_price = request.POST.get('totalPrice')
+        print(variant_type, fuel_type, color, booking_price, model_name, total_price)
+        order_data = {
+            'variant_type': variant_type,
+            'fuel_type': fuel_type,
+            'color': color,
+            'booking_price': booking_price,
+            'model_name': model_name,
+            'total_price': total_price
+        }
+        # return render(request, 'polls/order.html', order_data)
+
+        
+        query_params = urlencode({
+           'variant_type': variant_type,
+            'fuel_type': fuel_type,
+            'color': color,
+            'booking_price': booking_price,
+            'model_name': model_name,
+            'total_price': total_price
+            # Add more fields as needed
+        })
+        redirect_url = '/show_payment/?'+query_params
+        return JsonResponse({'redirect_url': redirect_url})
+        # Serialize the data into JSON format
+        # redirect_url = '/show_payment/'
+        # return JsonResponse({'redirect_url': redirect_url, 'order_data': order_data})
+    else:
+        return HttpResponse("This view only accepts POST requests.")
+
+    
+def show_payment(request):
+     return render(request, 'polls/order.html')
+              
