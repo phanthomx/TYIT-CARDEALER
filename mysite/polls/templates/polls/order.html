@@ -23,9 +23,10 @@
                 <p id="booking-price"></p>
                 <p id="model-name"></p>
                 <p id="total-price"></p>
-                <h1> personal info </h1>
+                <h1> personal info </h>
                 <div>
-                    
+                <form  method="post" action="{% url 'initiate_payment' %}" >
+                {% csrf_token %}
                         <input  type="hidden" id="var-type" /> 
                         <input  type="hidden" id="fuel" /> 
                         <input type="hidden" id="color-n" /> 
@@ -46,7 +47,8 @@
                         <input type="file" id="file" name="file" accept=".pdf,.png" required><br><br>
                         <label for="file">Upload PDF/PNG:</label><br>
                         <input type="file" id="file" name="file" accept=".pdf,.png" required><br><br>
-                        <input type="submit" value="Submit">
+                        <button type="submit">Pay Now</button>
+                      
                     </form>
                 </div>
 

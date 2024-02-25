@@ -16,7 +16,9 @@ from .models import Customer, Employee, Appointment, Attendee, Event
 import hashlib
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
+from django.conf import settings
+from django.shortcuts import render
+import razorpay
 
 
 from urllib.parse import urlencode
@@ -382,3 +384,24 @@ def orderinfo(request):
 def show_payment(request):
      return render(request, 'polls/order.html')
               
+from razorpay.errors import BadRequestError
+
+from django.conf import settings
+def initiate_payment(request):
+    if request.method == "POST":
+        amount = 500 # Amount in paisa
+        try:
+            client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
+            payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': True})
+            return render(request, 'polls/payment.html', {'payment': payment})
+        except BadRequestError as e:
+            print("Razorpay API Error:", e)
+            # Handle the error, perhaps by returning an error page
+            return render(request, 'error.html', {'error_message': 'Error processing payment'})
+    return render(request, 'polls/initiate_payment.html')
+
+def payment_success(request):
+    return render(request, 'polls/payment_success.html')
+
+def payment_failure(request):
+    return render(request, 'polls/payment_failure.html')

@@ -27,6 +27,12 @@ urlpatterns = [
     path('showcar/', views.showcar, name= 'showcar'),
     path('orderinfo/', views.orderinfo, name= 'orderinfo'),
     path('show_payment/', views.show_payment, name= 'show_payment'),
+    path('initiate_payment/', views.initiate_payment, name= 'initiate_payment'),
+
+    path('payment_success/', views.payment_success, name= 'payment_success'),
+
+    path('payment_failure/', views.payment_failure, name= 'payment_failure'),
+
     
     
 
