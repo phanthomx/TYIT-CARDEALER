@@ -352,23 +352,17 @@ def orderinfo(request):
         model_name = request.POST.get('modelName')
         total_price = request.POST.get('totalPrice')
         print(variant_type, fuel_type, color, booking_price, model_name, total_price)
-        order_data = {
-            'variant_type': variant_type,
-            'fuel_type': fuel_type,
-            'color': color,
-            'booking_price': booking_price,
-            'model_name': model_name,
-            'total_price': total_price
-        }
-        # return render(request, 'polls/order.html', order_data)
-
-        
+        client = razorpay.Client(auth=("rzp_test_eAkHPAnkDkrRNg", "we8dV3Z1IqeYhDSoFbdubLZ7"))
+        payment = client.order.create({'amount': booking_price, 'currency': 'INR', 'payment_capture': '1'})
+        print(payment)       
         query_params = urlencode({
            'variant_type': variant_type,
             'fuel_type': fuel_type,
             'color': color,
             'booking_price': booking_price,
             'model_name': model_name,
+            'client':client,
+            'payement':payment,
             'total_price': total_price
             # Add more fields as needed
         })
@@ -388,18 +382,61 @@ from razorpay.errors import BadRequestError
 
 from django.conf import settings
 def initiate_payment(request):
-    if request.method == "POST":
-        amount = 500 # Amount in paisa
-        try:
-            client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
-            payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': True})
-            return render(request, 'polls/payment.html', {'payment': payment})
-        except BadRequestError as e:
-            print("Razorpay API Error:", e)
-            # Handle the error, perhaps by returning an error page
-            return render(request, 'error.html', {'error_message': 'Error processing payment'})
-    return render(request, 'polls/initiate_payment.html')
+    print("----------")
+    if request.method == 'POST':
+        # Fetch the data from the form
+        var_type = request.POST.get('var-type')
+        fuel = request.POST.get('fuel')
+        color_n = request.POST.get('color-n')
+        amount = request.POST.get('booking')
+        model = request.POST.get('model')
+        print(amount)
+        tot_price = request.POST.get('tot-price')
+        fname = request.POST.get('fname')
+        print(fname)
+        lname = request.POST.get('lname')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
 
+        # Handle file uploads
+        file1 = request.FILES.get('file1')
+        file2 = request.FILES.get('file2')
+        # Process the uploaded files as needed (save to storage, etc.)
+
+        # Initialize Razorpay client with your key_id and key_secret
+        client = razorpay.Client(auth=("rzp_test_eAkHPAnkDkrRNg", "we8dV3Z1IqeYhDSoFbdubLZ7"))
+      
+        # Create a Razorpay order
+        # Example amount in paise (₹500)
+        payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
+        
+        # Return the order ID and other details to the frontend
+        return render(request, 'polls/payment_success.html')
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def payment_callback(request):
+    if request.method == 'POST':
+        # Retrieve the Razorpay payment ID and signature from the request
+        razorpay_payment_id = request.POST.get('razorpay_payment_id')
+        razorpay_signature = request.POST.get('razorpay_signature')
+
+        # Verify the payment signature
+        # This step is crucial for security, as it ensures the payment details are authentic
+        client = razorpay.Client(auth=("rzp_test_xZASdur2pENnxW", "UbNz8BtL2zmsHxb6Puaayilj"))
+        attributes = {
+            'razorpay_order_id': request.POST.get('razorpay_order_id'),
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+        try:
+            client.utility.verify_payment_signature(attributes)
+            # Payment signature is valid, you can mark the payment as successful in your database or perform other actions
+            return HttpResponse(status=200)
+        except razorpay.errors.SignatureVerificationError as e:
+            # Payment signature is invalid, handle the error as needed
+            return HttpResponse(status=400)
 def payment_success(request):
     return render(request, 'polls/payment_success.html')
 
