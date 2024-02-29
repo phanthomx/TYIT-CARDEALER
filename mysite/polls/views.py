@@ -9,7 +9,7 @@ from django.conf import settings
 from django.db import connection
 from django.contrib.auth import  authenticate
 from .models import CarModel, CarColor,CarGalleryInte,CarGalleryVid, CarGalleryExt, CarTech, Carvarient, carFuel, carinfo, Generalinfo
-
+from .models import *
 
 from datetime import datetime, timedelta, date
 from .models import Customer, Employee, Appointment, Attendee, Event
@@ -57,8 +57,7 @@ def showcar(request):
         fuel = carFuel.objects.filter(car_model=model)
         info = carinfo.objects.filter(car_model=model).all()
         genfo = Generalinfo.objects.filter(car_model=model)
-
-
+\
         
         return render(request, 'polls/car_dtail.html', {
     'Model_info': model,
@@ -345,29 +344,34 @@ def orderinfo(request):
     
     if request.method == 'POST':
         # Access the data sent from the form
-        variant_type = request.POST.get('variantType')
-        fuel_type = request.POST.get('fuelType')
-        color = request.POST.get('colorVariant')
+        variant_type = request.POST.get('selected_varient')
+        fuel_type = request.POST.get('selected_fuel')
+        color = request.POST.get('selected_color')
         booking_price = request.POST.get('bookingAmount')
         model_name = request.POST.get('modelName')
-        total_price = request.POST.get('totalPrice')
+        total_price = request.POST.get('tot_price')
         print(variant_type, fuel_type, color, booking_price, model_name, total_price)
         client = razorpay.Client(auth=("rzp_test_eAkHPAnkDkrRNg", "we8dV3Z1IqeYhDSoFbdubLZ7"))
         payment = client.order.create({'amount': booking_price, 'currency': 'INR', 'payment_capture': '1'})
-        print(payment)       
-        query_params = urlencode({
-           'variant_type': variant_type,
-            'fuel_type': fuel_type,
-            'color': color,
-            'booking_price': booking_price,
-            'model_name': model_name,
-            'client':client,
-            'payement':payment,
-            'total_price': total_price
-            # Add more fields as needed
-        })
-        redirect_url = '/show_payment/?'+query_params
-        return JsonResponse({'redirect_url': redirect_url})
+        razorpay_order_id = payment['id']
+        print(payment)   
+        callback_url = '/initiate_payment/'    
+        context = {
+        'variant_type': variant_type,
+        'fuel_type': fuel_type,
+        'color': color,
+        'booking_price': booking_price,
+        'razorpay_order_id':razorpay_order_id,
+        'payment':payment,
+        'callback_url':callback_url,
+        'model_name': model_name,
+        'total_price': total_price,
+
+    }
+    
+        return render(request, 'polls/order.html', context)
+        # redirect_url = '/show_payment/?'+query_params
+        # return JsonResponse({'redirect_url': redirect_url})
         # Serialize the data into JSON format
         # redirect_url = '/show_payment/'
         # return JsonResponse({'redirect_url': redirect_url, 'order_data': order_data})
@@ -381,62 +385,58 @@ def show_payment(request):
 from razorpay.errors import BadRequestError
 
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def initiate_payment(request):
+
     print("----------")
-    if request.method == 'POST':
-        # Fetch the data from the form
-        var_type = request.POST.get('var-type')
-        fuel = request.POST.get('fuel')
-        color_n = request.POST.get('color-n')
-        amount = request.POST.get('booking')
-        model = request.POST.get('model')
+    
+    if request.method == "POST":
+        var_type = request.POST.get('variant_type')
+        fuel = request.POST.get('fuel_type')
+        color_n = request.POST.get('color')
+        amount = request.POST.get('booking_price')
+        model = request.POST.get('model_name')
         print(amount)
-        tot_price = request.POST.get('tot-price')
+        tot_price = request.POST.get('total_price')
         fname = request.POST.get('fname')
         print(fname)
         lname = request.POST.get('lname')
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         address = request.POST.get('address')
-
-        # Handle file uploads
+        payid = request.POST.get('payement')
+        print(payid)
         file1 = request.FILES.get('file1')
         file2 = request.FILES.get('file2')
-        # Process the uploaded files as needed (save to storage, etc.)
-
-        # Initialize Razorpay client with your key_id and key_secret
-        client = razorpay.Client(auth=("rzp_test_eAkHPAnkDkrRNg", "we8dV3Z1IqeYhDSoFbdubLZ7"))
-      
-        # Create a Razorpay order
-        # Example amount in paise (₹500)
-        payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
+        new_entry = CarBooking(
+            var_type=var_type,
+            fuel=fuel,
+            color_n=color_n,
+            amount=amount,
+            model=model,
+            tot_price=tot_price,
+            fname=fname,
+            lname=lname,
+            phone=phone,
+            email=email,
+            address=address,
+            file1=file1,
+            file2=file2,
+            
+        )
         
-        # Return the order ID and other details to the frontend
+        # Save the instance to the database
+        new_entry.save()
         return render(request, 'polls/payment_success.html')
+    else:
+        return render(request, 'polls/payment_failure.html')
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def payment_callback(request):
-    if request.method == 'POST':
-        # Retrieve the Razorpay payment ID and signature from the request
-        razorpay_payment_id = request.POST.get('razorpay_payment_id')
-        razorpay_signature = request.POST.get('razorpay_signature')
 
-        # Verify the payment signature
-        # This step is crucial for security, as it ensures the payment details are authentic
-        client = razorpay.Client(auth=("rzp_test_xZASdur2pENnxW", "UbNz8BtL2zmsHxb6Puaayilj"))
-        attributes = {
-            'razorpay_order_id': request.POST.get('razorpay_order_id'),
-            'razorpay_payment_id': razorpay_payment_id,
-            'razorpay_signature': razorpay_signature
-        }
-        try:
-            client.utility.verify_payment_signature(attributes)
-            # Payment signature is valid, you can mark the payment as successful in your database or perform other actions
-            return HttpResponse(status=200)
-        except razorpay.errors.SignatureVerificationError as e:
-            # Payment signature is invalid, handle the error as needed
-            return HttpResponse(status=400)
+
 def payment_success(request):
     return render(request, 'polls/payment_success.html')
 

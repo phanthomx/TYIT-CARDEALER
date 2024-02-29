@@ -9,7 +9,7 @@ admin.site.register(Appointment)
 admin.site.register(Event)
 admin.site.register(Attendee)
    
-
+from .models import *
 from django.contrib import admin
 from .models import CarModel, CarColor,CarGalleryInte,CarGalleryVid, CarGalleryExt, CarTech, Carvarient, carFuel, carinfo, Generalinfo
 
@@ -24,5 +24,5 @@ admin.site.register(Carvarient)
 admin.site.register(carFuel)
 admin.site.register(carinfo)
 admin.site.register(Generalinfo)
-
+admin.site.register(CarBooking)
 

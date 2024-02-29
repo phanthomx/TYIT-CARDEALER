@@ -435,7 +435,21 @@
   <h2>Total Price</h2>
   <p id="total_price"></p>
 </div>
-<button  id="checkout"class="checkout-btn">Checkout Now</button>
+<form id="carForm" method="post" action="{% url 'orderinfo' %}">
+  {% csrf_token %}
+  <!-- Hidden input fields to store selected values -->
+  <input type="text" name="selected_color" id="selected_color_input">
+  <input type="text" name="selected_varient" id="selected_varient_input">
+  <input type="text" name="selected_fuel" id="selected_fuel_input">
+  <input type="text" name="tot_price" id="tot_price_input">
+  <input type="text" name="modelName" id="modelName" value="{{ Model_info.name }}">
+  <input type="text" name="bookingAmount" id="bookingAmount_input" value="{{ booking_amount }}">
+
+  <input type="submit"  value="Pay Now!">
+
+
+</form>
+
 
 
 
@@ -451,6 +465,7 @@ const fuelSelected = document.getElementById('fuel_selected');
 const totalPriceElement = document.getElementById('total_price');
 const basePrice = parseFloat('{{ Model_info.min_price }}');
 const bookingAmount = parseFloat('{{ genfo.0.booking_cost }}');
+document.getElementById("bookingAmount_input").value = bookingAmount;
 console.log("-------");
 console.log(bookingAmount)
 
@@ -497,7 +512,7 @@ function updateTotalPrice() {
   totalPriceElement.textContent = 'Total Price: ₹' + totalPrice.toFixed(2);
 }
 // Function to send data via AJAX
-function sendDataViaAjax() {
+{% comment %} function sendDataViaAjax() {
   // Extracting selected options from the select elements
   const selectedColorValue = selectedColor.value;
   const selectedVariantValue = selectedVariant.value;
@@ -548,13 +563,13 @@ function sendDataViaAjax() {
       console.error('Error sending data: ', error);
     }
   });
-}
+} {% endcomment %}
 
 // Event listener for the Checkout Now button
-document.getElementById('checkout').addEventListener('click', function() {
+{% comment %} document.getElementById('checkout').addEventListener('click', function() {
   // Call the function to send data via AJAX
   sendDataViaAjax();
-});
+}); {% endcomment %}
 
 
         $(document).ready(function(){
@@ -607,6 +622,43 @@ document.getElementById('checkout').addEventListener('click', function() {
     
 
     </script>
+    <script>
+      // Function to update hidden input field with selected value
+      function updateHiddenInput(inputId, selectedValue) {
+          document.getElementById(inputId).value = selectedValue;
+      }
+  
+      // Event listener for color dropdown
+      document.getElementById("selected_color").addEventListener("change", function() {
+          var selectedColor = this.value;
+          updateHiddenInput("selected_color_input", selectedColor);
+      });
+  
+      // Event listener for variant dropdown
+      document.getElementById("selected_varient").addEventListener("change", function() {
+          var selectedVariant = this.value;
+          updateHiddenInput("selected_varient_input", selectedVariant.split("|")[0]); // Only extract variant name
+          calculateTotal();
+      });
+  
+      // Event listener for fuel dropdown
+      document.getElementById("selected_fuel").addEventListener("change", function() {
+          var selectedFuel = this.value;
+          updateHiddenInput("selected_fuel_input", selectedFuel.split("|")[0]); // Only extract fuel type
+          calculateTotal();
+      });
+  
+      // Function to calculate total price
+      function calculateTotal() {
+          var variantPrice = parseFloat(document.getElementById("selected_varient").value.split("|")[1]);
+          var fuelPrice = parseFloat(document.getElementById("selected_fuel").value.split("|")[1]);
+          var totalPrice = basePrice + variantPrice + fuelPrice;
+          document.getElementById("tot_price_input").value = totalPrice.toFixed(2);
+      }
+  
+  </script>
+  
+
     
 </body>
 </html> 

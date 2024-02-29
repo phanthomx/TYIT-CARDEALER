@@ -97,17 +97,7 @@ class CarColor(models.Model):
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE)
     colorpic = CloudinaryField("media", blank=True, null=True)
     colorname = models.CharField(max_length=100)
-    # colorpic2 = CloudinaryField("media", blank=True, null=True)
-    # colorname2 = models.CharField(max_length=100)
-    # colorpic3 = CloudinaryField("media", blank=True, null=True)
-    # colorname3 = models.CharField(max_length=100)
-    # colorpic4 = CloudinaryField("media", blank=True, null=True)
-    # colorname4 = models.CharField(max_length=100)
-    # colorpic5 = CloudinaryField("media", blank=True, null=True)
-    # colorname5 = models.CharField(max_length=100)
-    # colorpic6 = CloudinaryField("media", blank=True, null=True)
-    # colorname6 = models.CharField(max_length=100)
-    
+
 class CarGalleryExt(models.Model):
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE)
     Exterior = CloudinaryField("media", blank=True, null=True)
@@ -128,37 +118,13 @@ class CarTech(models.Model):
     Tech_pic = CloudinaryField("media", blank=True, null=True)
     Tech_name = models.CharField(max_length=100)
     Tech_desc = models.TextField(blank=True)
-    # Tech_pic2 = CloudinaryField("media", blank=True, null=True)
-    # Tech_name2 = models.CharField(max_length=100)
-    # Tech_desc_2 = models.TextField(blank=True)
-    # Tech_pic3 = CloudinaryField("media", blank=True, null=True)
-    # Tech_name3 = models.CharField(max_length=100)
-    # Tech_desc_3 = models.TextField(blank=True)
-    # Tech_pic4 = CloudinaryField("media", blank=True, null=True)
-    # Tech_name4 = models.CharField(max_length=100)
-    # Tech_desc_4 = models.TextField(blank=True)
-    # Tech_pic5 = CloudinaryField("media", blank=True, null=True)
-    # Tech_name5 = models.CharField(max_length=100)
-    # Tech_desc_5 = models.TextField(blank=True)
-    
+
 class Carvarient(models.Model):
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE)
     Varient_name = models.CharField(max_length=100)
     Varient_desc = models.TextField(blank=True)
     Var_price = models.DecimalField(max_digits=10, decimal_places=2)
-    # Varient_name_2 = models.CharField(max_length=100)
-    # Varient_desc_2 = models.TextField(blank=True)
-    # Var_price_2 = models.DecimalField(max_digits=10, decimal_places=2)
-    # Varient_name_3 = models.CharField(max_length=100)
-    # Varient_desc_3 = models.TextField(blank=True)
-    # Var_price_3 = models.DecimalField(max_digits=10, decimal_places=2)
-    # Varient_name_4 = models.CharField(max_length=100)
-    # Varient_desc_4 = models.TextField(blank=True)
-    # Var_price_4 = models.DecimalField(max_digits=10, decimal_places=2)
-    # Varient_name_5 = models.CharField(max_length=100)
-    # Varient_desc_5 = models.TextField(blank=True)
-    # Var_price_5 = models.DecimalField(max_digits=10, decimal_places=2)
-    
+
 class carFuel(models.Model):
     FUEL_CHOICES = [
         ('petrol', 'Petrol'),
@@ -171,15 +137,7 @@ class carFuel(models.Model):
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE)
     Fuel_type = models.CharField(max_length=100, choices=FUEL_CHOICES)
     Fuel_price = models.DecimalField(max_digits=10, decimal_places=2)
-    # Fuel_type_2 = models.CharField(max_length=100, choices=FUEL_CHOICES, blank=True, null=True)
-    # Fuel_price_2 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    # Fuel_type_3 = models.CharField(max_length=100, choices=FUEL_CHOICES, blank=True, null=True)
-    # Fuel_price_3 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    # Fuel_type_4 = models.CharField(max_length=100, choices=FUEL_CHOICES, blank=True, null=True)
-    # Fuel_price_4 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    # Fuel_type_5 = models.CharField(max_length=100, choices=FUEL_CHOICES, blank=True, null=True)
-    # Fuel_price_5 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    
+
 class carinfo(models.Model):
     OWNING_CHOICES = [
         ('first_hand', 'First Hand'),
@@ -201,4 +159,22 @@ class Generalinfo(models.Model):
     Delivery_time= models.CharField(max_length=100)
     emi  = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
-    
+class CarBooking(models.Model):
+    var_type = models.CharField(max_length=100)
+    fuel = models.CharField(max_length=100)
+    color_n = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    model = models.CharField(max_length=100)
+    tot_price = models.DecimalField(max_digits=10, decimal_places=2)
+    fname = models.CharField(max_length=100)
+    lname = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    address = models.TextField()
+    file1 = models.FileField(upload_to='uploads/', storage=RawMediaCloudinaryStorage())
+    file2 = models.FileField(upload_to='uploads/', storage=RawMediaCloudinaryStorage())
+   
+    paid = models.BooleanField(default=False)
+    orderid = models.CharField(max_length=100)
+    def __str__(self):
+        return f"{self.model} - {self.var_type}"
