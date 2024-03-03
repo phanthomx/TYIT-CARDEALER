@@ -305,17 +305,41 @@ def servicereq(request):
         return JsonResponse({'redirect_url': redirect_url})
    
 
+import csv
+from django.http import HttpResponse
+from django.http import FileResponse
+import tempfile
+import os
 def getservice(request):
     if request.method == "POST":
-                appointmentDate = request.POST.get("appointmentDate")
-                print(appointmentDate)
-                cursor = connection.cursor()
-                cursor.execute("SELECT DISTINCT name,email,phone,appointment_time , token FROM polls_appointment WHERE appointment_date = %s ORDER BY appointment_time ASC", [appointmentDate])
-                count_result = cursor.fetchall()
-                context = {'query_result': count_result}
-                return render(request, 'polls/EmpServ.html', context)
-               
-    return render(request, 'polls/EmpServ.html', context)
+        appointmentDate = request.POST.get("appointmentDate")
+        cursor = connection.cursor()
+        cursor.execute("SELECT DISTINCT name, email, phone, appointment_time, token FROM polls_appointment WHERE appointment_date = %s ORDER BY appointment_time ASC", [appointmentDate])
+        query_result = cursor.fetchall()
+        
+        if not query_result:
+            return render(request, 'polls/no_records.html', {'appointmentDate': appointmentDate})
+
+        # Create CSV data
+        csv_data = [
+            ['Name', 'Email', 'Phone', 'Appointment Time', 'Token']
+        ]
+        for row in query_result:
+            csv_data.append(row)
+
+        # Convert CSV data to string
+        csv_content = '\n'.join([','.join(map(str, row)) for row in csv_data])
+
+        # Offer CSV content for download via render
+        context = {
+            'query_result': query_result,
+            'csv_content': csv_content
+        }
+
+        return render(request, 'polls/EmpServ.html', context)
+
+    return render(request, 'polls/EmpServ.html')
+
 
 from django.shortcuts import render
 from polls.models import Attendee  # Assuming the model name is Attendee
@@ -330,8 +354,14 @@ def getevent(request):
         print(eventname)
         attendees = Attendee.objects.filter(event=eventname)
         event_list = Event.objects.values_list('event_name', 'date_time').distinct()
+        csv_data = [
+            ['Name', 'Email', 'Phone', 'Event', 'Registration Date']
+        ]
+        for attendee in attendees:
+            csv_data.append([attendee.name, attendee.email, attendee.phone, attendee.event, attendee.registration_date])
+        csv_content = '\n'.join([','.join(map(str, row)) for row in csv_data])
 
-        return render(request, 'polls/EmpEvents.html', {'events': event_list, 'attendees': attendees})
+        return render(request, 'polls/EmpEvents.html', {'events': event_list, 'attendees': attendees,'csv_content': csv_content})
     else:
         event_list = Event.objects.values_list('event_name', 'date_time').distinct()
 
@@ -370,11 +400,7 @@ def orderinfo(request):
     }
     
         return render(request, 'polls/order.html', context)
-        # redirect_url = '/show_payment/?'+query_params
-        # return JsonResponse({'redirect_url': redirect_url})
-        # Serialize the data into JSON format
-        # redirect_url = '/show_payment/'
-        # return JsonResponse({'redirect_url': redirect_url, 'order_data': order_data})
+
     else:
         return HttpResponse("This view only accepts POST requests.")
 
@@ -406,10 +432,11 @@ def initiate_payment(request):
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         address = request.POST.get('address')
-        payid = request.POST.get('payement')
+        payid = request.POST.get('razorpay_order_id')
         print(payid)
-        file1 = request.FILES.get('file1')
-        file2 = request.FILES.get('file2')
+        file1 = request.POST.get('file1')
+        file2 = request.POST.get('file2')
+        print(file1,file2)
         new_entry = CarBooking(
             var_type=var_type,
             fuel=fuel,
@@ -424,6 +451,7 @@ def initiate_payment(request):
             address=address,
             file1=file1,
             file2=file2,
+            orderid=payid
             
         )
         
@@ -442,3 +470,50 @@ def payment_success(request):
 
 def payment_failure(request):
     return render(request, 'polls/payment_failure.html')
+
+# def empbuy(request):
+#      return render(request, 'polls/empbuy.html')
+ 
+def empbuy(request):
+    date = request.GET.get('date') 
+    print("-----------")# Retrieve date from query parameters
+    print(date)
+    # Fetch bookings based on the provided date
+    if date:
+        bookings = CarBooking.objects.filter(created_at=date)
+        csv_data = [
+        ['Model', 'Variant Type', 'Fuel', 'Color', 'Amount', 'Total Price',
+         'First Name', 'Last Name', 'Phone', 'Email', 'Address', 'Order ID', 'Created At']
+            ]
+
+        for booking in bookings:
+            csv_data.append([
+            booking.model, booking.var_type, booking.fuel, booking.color_n,
+            booking.amount, booking.tot_price, booking.fname, booking.lname,
+            booking.phone, booking.email, booking.address, booking.orderid, booking.created_at
+        ])
+
+    # Convert CSV data to string
+        csv_content = '\n'.join([','.join(map(str, row)) for row in csv_data])
+        
+        
+        
+    else:
+        # If no date is provided, retrieve all bookings
+        bookings = CarBooking.objects.all()
+        csv_data = [
+        ['Model', 'Variant Type', 'Fuel', 'Color', 'Amount', 'Total Price',
+         'First Name', 'Last Name', 'Phone', 'Email', 'Address', 'Order ID', 'Created At']
+            ]
+
+        for booking in bookings:
+            csv_data.append([
+            booking.model, booking.var_type, booking.fuel, booking.color_n,
+            booking.amount, booking.tot_price, booking.fname, booking.lname,
+            booking.phone, booking.email, booking.address, booking.orderid, booking.created_at
+        ])
+
+    # Convert CSV data to string
+        csv_content = '\n'.join([','.join(map(str, row)) for row in csv_data])
+    # Pass bookings and date to the template context
+    return render(request, 'polls/empbuy.html', {'bookings': bookings, 'date': date,'csv_content': csv_content})

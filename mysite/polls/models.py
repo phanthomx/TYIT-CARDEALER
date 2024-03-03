@@ -171,10 +171,11 @@ class CarBooking(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     address = models.TextField()
-    file1 = models.FileField(upload_to='uploads/', storage=RawMediaCloudinaryStorage())
-    file2 = models.FileField(upload_to='uploads/', storage=RawMediaCloudinaryStorage())
-   
+    file1 = CloudinaryField("media", blank=True, null=True)
+    file2 = CloudinaryField("media", blank=True, null=True)
     paid = models.BooleanField(default=False)
     orderid = models.CharField(max_length=100)
+    created_at = models.DateField(auto_now_add=True)  # Automatically set the date and time when object is created
+
     def __str__(self):
         return f"{self.model} - {self.var_type}"

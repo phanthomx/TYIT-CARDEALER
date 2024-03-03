@@ -15,7 +15,7 @@
         /* Add styles from both documents */
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
+            margin: 10px;
             padding: 0;
             background-color: #f0f0f0;
             color: #333;
@@ -383,12 +383,13 @@
 {% endfor %}
 
     </table>
+ 
     <select id="selected_varient">
       {% for varient in varients %}
       <option id="selcar" value="{{ varient.Varient_name }}|{{ varient.Var_price }}">{{ varient.Varient_name }}</option>      
       {% endfor %}
     </select>
-
+    <h1>SELECT FUEL</h1>
     <table id="news_table">
       {% for f in fuel %}
       <tr>

@@ -124,7 +124,7 @@
         <nav>
             <ul>
                 <li><a href="{% url 'home' %}">Logout</a></li>
-                <li><a href="{% url 'buy' %}">BUY</a></li>
+                <li><a href="{% url 'empbuy' %}">BUY</a></li>
                 <li><a href="{% url 'eservice' %}">SERVICE</a></li>
                 <li><a href="{% url 'getevent' %}">EVENTS</a></li>
                 <li><a href="{% url 'ehome' %}">Home</a></li>
@@ -166,6 +166,9 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if csv_content %}
+        <a href="data:text/csv;charset=utf-8,{{ csv_content|urlencode }}" download="attendee_data.csv">Download CSV</a>
+    {% endif %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

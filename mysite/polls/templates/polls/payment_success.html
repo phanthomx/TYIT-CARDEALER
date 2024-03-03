@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,17 @@
     <title>Payment Success</title>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Logout</a></li>
+                <li><a href="{% url 'buy' %}">BUY</a></li>
+                <li><a href="{% url 'service' %}">SERVICE</a></li>
+                <li><a href="{% url 'events' %}">EVENTS</a></li>
+    
+            </ul>
+        </nav>
+    </header>
     <h1>Payment Successful!</h1>
 </body>
 </html>

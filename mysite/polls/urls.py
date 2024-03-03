@@ -31,9 +31,10 @@ urlpatterns = [
 
     path('payment_success/', views.payment_success, name= 'payment_success'),
 
-    path('payment_failure/', views.payment_failure, name= 'payment_failure'),
+    path('empbuy/', views.empbuy, name= 'empbuy'),
 
-    
+    # path('empshowbuy/', views.empshowbuy, name= 'empshowbuy'),
+
     
 
 
