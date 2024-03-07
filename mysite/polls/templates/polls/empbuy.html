@@ -136,11 +136,13 @@
                         <td>{{ booking.orderid }}</td>
                         <td>{{ booking.created_at }}</td>
                         <td>
+                           
                             {% if booking.file1 %}
-                                <a href="{{ booking.file1.url }}" target="_blank">PDF 1</a><br>
+                            <img src="{{ booking.file1 }}" alt="Image 1" style="width: 300px; height: 300px;">
                             {% endif %}
+                  
                             {% if booking.file2 %}
-                                <a href="{{ booking.file2.url }}" target="_blank">PDF 2</a><br>
+                            <img src="{{ booking.file2 }}" alt="Image 1" style="width: 300px; height: 300px;">
                             {% endif %}
                         </td>
                     </tr>

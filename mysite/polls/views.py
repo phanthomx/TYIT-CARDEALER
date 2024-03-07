@@ -318,7 +318,7 @@ def getservice(request):
         query_result = cursor.fetchall()
         
         if not query_result:
-            return render(request, 'polls/no_records.html', {'appointmentDate': appointmentDate})
+            return render(request, 'polls/EmpServ.html', {'appointmentDate': appointmentDate})
 
         # Create CSV data
         csv_data = [
