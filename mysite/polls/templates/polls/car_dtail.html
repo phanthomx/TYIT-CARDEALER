@@ -439,17 +439,16 @@
 <form id="carForm" method="post" action="{% url 'orderinfo' %}">
   {% csrf_token %}
   <!-- Hidden input fields to store selected values -->
-  <input type="text" name="selected_color" id="selected_color_input">
-  <input type="text" name="selected_varient" id="selected_varient_input">
-  <input type="text" name="selected_fuel" id="selected_fuel_input">
-  <input type="text" name="tot_price" id="tot_price_input">
-  <input type="text" name="modelName" id="modelName" value="{{ Model_info.name }}">
-  <input type="text" name="bookingAmount" id="bookingAmount_input" value="{{ booking_amount }}">
+  <input type="text" name="selected_color" id="selected_color_input" required oninvalid="this.setCustomValidity('Please select a color')">
+  <input type="text" name="selected_varient" id="selected_varient_input" required oninvalid="this.setCustomValidity('Please select a variant')">
+  <input type="text" name="selected_fuel" id="selected_fuel_input" required oninvalid="this.setCustomValidity('Please select a fuel type')">
+  <input type="text" name="tot_price" id="tot_price_input" required oninvalid="this.setCustomValidity('Please enter the total price')">
+  <input type="text" name="modelName" id="modelName" value="{{ Model_info.name }}" required oninvalid="this.setCustomValidity('Please enter the model name')">
+  <input type="text" name="bookingAmount" id="bookingAmount_input" value="{{ booking_amount }}" required oninvalid="this.setCustomValidity('Please enter the booking amount')">
 
   <input type="submit"  value="Pay Now!">
-
-
 </form>
+
 
 
 
@@ -512,65 +511,6 @@ function updateTotalPrice() {
 
   totalPriceElement.textContent = 'Total Price: ₹' + totalPrice.toFixed(2);
 }
-// Function to send data via AJAX
-{% comment %} function sendDataViaAjax() {
-  // Extracting selected options from the select elements
-  const selectedColorValue = selectedColor.value;
-  const selectedVariantValue = selectedVariant.value;
-  const selectedFuelValue = selectedFuel.value;
-
-  // Extracting variant type and fuel type from selected options
-  const selectedVariantOption = selectedVariantValue.split('|');
-  const selectedFuelOption = selectedFuelValue.split('|');
-
-  const variantType = selectedVariantOption[0];
-  const fuelType = selectedFuelOption[0];
-
-  // Extracting booking amount from somewhere in your code
-  const bookingAmount = parseFloat('{{ genfo.0.booking_cost }}');
-  console.log("-------");
-  console.log(bookingAmount)
-  // Total price calculation
-  const variantPrice = parseFloat(selectedVariantOption[1]);
-  const fuelPrice = parseFloat(selectedFuelOption[1]);
-  const totalPrice = basePrice + variantPrice + fuelPrice;
-
-  // Model name extraction
-  const modelName = '{{ Model_info.name }}';
-
-  // AJAX request to send data to the server
-  $.ajax({
-    type: 'POST',
-    url: '/orderinfo/', 
-    headers: { "X-CSRFToken": csrfToken },// Replace with your server endpoint
-    data: {
-      totalPrice: totalPrice,
-      fuelType: fuelType,
-      colorVariant: selectedColorValue,
-      variantType: variantType,
-      modelName: modelName,
-      bookingAmount: bookingAmount,
-      
-    },
-    dataType: "json",
-    success: function(response) {
-      console.log(response)
-      window.location.href = response.redirect_url;
-
-
-    },
-    error: function(xhr, status, error) {
-      // Handle error if any
-      console.error('Error sending data: ', error);
-    }
-  });
-} {% endcomment %}
-
-// Event listener for the Checkout Now button
-{% comment %} document.getElementById('checkout').addEventListener('click', function() {
-  // Call the function to send data via AJAX
-  sendDataViaAjax();
-}); {% endcomment %}
 
 
         $(document).ready(function(){
@@ -656,7 +596,24 @@ function updateTotalPrice() {
           var totalPrice = basePrice + variantPrice + fuelPrice;
           document.getElementById("tot_price_input").value = totalPrice.toFixed(2);
       }
-  
+      document.getElementById("carForm").addEventListener("submit", function(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+        
+        // Check if color, variant, and fuel type are selected
+        var selectedColor = document.getElementById("selected_color").value;
+        var selectedVariant = document.getElementById("selected_varient").value;
+        var selectedFuel = document.getElementById("selected_fuel").value;
+        
+        if (selectedColor === "" || selectedVariant === "" || selectedFuel === "") {
+            // If any of the options are not selected, show an alert or handle it in any other way
+            alert("Please select color, variant, and fuel type before proceeding.");
+        } else {
+            // If all options are selected, submit the form
+            this.submit();
+        }
+    });
+    
   </script>
   
 

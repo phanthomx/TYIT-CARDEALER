@@ -1,27 +1,32 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import connection
-from django.contrib.auth import  authenticate
-from .models import CarModel, CarColor,CarGalleryInte,CarGalleryVid, CarGalleryExt, CarTech, Carvarient, carFuel, carinfo, Generalinfo
-from .models import *
+
+# Import models once
+from .models import (CarModel,CarColor,CarGalleryInte,CarGalleryVid,CarGalleryExt,CarTech,Carvarient,
+    carFuel,carinfo,Generalinfo, Customer,  Employee, Appointment,Attendee,Event,)
+
+import csv
+from django.http import HttpResponse, FileResponse
+import tempfile
+import os
 
 from datetime import datetime, timedelta, date
-from .models import Customer, Employee, Appointment, Attendee, Event
-import hashlib
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import render
 import razorpay
-
+from razorpay.errors import BadRequestError
+from django.views.decorators.csrf import csrf_exempt
 
 from urllib.parse import urlencode
+
 
 
 def polls(request):
@@ -43,7 +48,7 @@ def buy(request):
         # Pass the events to the template for rendering
 
         return render(request, 'polls/buy.html', {'car_models': carmodel})
-    
+   
 def showcar(request):
     if request.method == "POST":
         carname = request.POST.get("car_name")
@@ -70,9 +75,7 @@ def showcar(request):
     'info': info,
     'genfo': genfo,
     'colors': color
-})
-        
-        
+})     
     return render(request, 'polls/buy.html')
 def service(request):
     return render(request, 'polls/service.html')
@@ -101,9 +104,7 @@ def events(request):
                     moe = "Your registration is scuccessful"
 
         else:
-                    moe = "Sorry registrations are full"
-
-            
+                    moe = "Sorry registrations are full" 
         # Retrieve events again to update the context with the latest data
         events = Event.objects.all()
         # Pass the success message and events to the template for rendering
@@ -114,7 +115,6 @@ def events(request):
         # Pass the events to the template for rendering
         return render(request, 'polls/events.html', {'events': events})
 def chome(request):
-
         return render(request, 'polls/eafter.html')
 
 @login_required
@@ -135,7 +135,6 @@ def loginverify(request):
             elist.append(customer.Email)
             epass.append(customer.password)
             print(customer.Email, customer.password)
-        
         try:
             n = elist.index(cemail)
             m = epass.index(str(cpassword))
@@ -147,8 +146,7 @@ def loginverify(request):
                 print("no problem")
                 messages.success(request, 'Login customer successful')
                 redirect_url = '/chome/'
-                return JsonResponse({'redirect_url': redirect_url})
-                
+                return JsonResponse({'redirect_url': redirect_url})   
             else:
                 raise ValueError("Invalid email or password")
         except ValueError as e:
@@ -156,12 +154,9 @@ def loginverify(request):
             print("problem occurred")
             redirect_url = '/Registration/'
             return JsonResponse({'redirect_url': redirect_url})
-
     # If request method is not POST or if there's an issue with the request
     return JsonResponse({'redirect_url': '/Registration/'})
-
 def emploginverify(request):
-
     print("----------- Emplogin verification------------")
     if request.method == "POST":
         eemail = request.POST.get("eemail")
@@ -177,17 +172,14 @@ def emploginverify(request):
             n = elist.index(eemail)
             m = epass.index(str(epassword))
             print(elist, epass)
-            if n == m:
-                
+            if n == m:   
                 user = authenticate(request, Empemail=eemail, Emppassword=epassword)
                 print(user)
-               
                 if user is not None:
                     print(user)
                     login(request, user)
                 print(user)
                 auth_login(request,user)
-                
                 print("no problem")
                 messages.success(request, 'Login  emp successful')
                 messagess = True
@@ -203,7 +195,6 @@ def emploginverify(request):
             print("problem occurred")
             redirect_url = '/EmpR/'
             return JsonResponse({'redirect_url': redirect_url})  
-
     template = 'polls/CustLandingpage.html'
     return render(request, template)
 
@@ -213,44 +204,29 @@ def Registration(request):
 def EmpRegistration(request):
     return render(request, 'polls/EmpRegia.html')
 def defaultpg(request):
-    print("-----------challa  bagh------------")
     if request.method == "POST":
         # Use request.POST.get() to retrieve form data
         name = request.POST.get("name")
         email = request.POST.get('email')
         password = request.POST.get('password')
-
-        
         new_cus = Customer(name=name,Email=email,password=password)
         new_cus.save()
-        
         template = loader.get_template('polls/EmpLogin.html')
         return HttpResponse(template.render())
-        
-
-   
-
     # You may want to handle the case when the request method is not POST
     template = loader.get_template('polls/EmpLogin.html')
     return HttpResponse(template.render())
 
 def emphome(request):
-    print("-----------Page worked------------")
     if request.method == "POST":
         # Use request.POST.get() to retrieve form data
         name = request.POST.get("name")
         email = request.POST.get('email')
         password = request.POST.get('password')
-
-        
         new_emp = Employee(Empname=name,Empemail=email,Emppassword=password)
         new_emp.save()
         template = loader.get_template('polls/EmpLogin.html')
         return HttpResponse(template.render())
-        
-
-   
-
     # You may want to handle the case when the request method is not POST
     template = loader.get_template('polls/EmpLogin.html')
     return HttpResponse(template.render())
@@ -303,13 +279,8 @@ def servicereq(request):
         print(name, email, phone, modelName, registrationNumber, appointmentDate, appointmentTime)
         redirect_url = '/chome/'
         return JsonResponse({'redirect_url': redirect_url})
-   
 
-import csv
-from django.http import HttpResponse
-from django.http import FileResponse
-import tempfile
-import os
+
 def getservice(request):
     if request.method == "POST":
         appointmentDate = request.POST.get("appointmentDate")
@@ -403,21 +374,12 @@ def orderinfo(request):
 
     else:
         return HttpResponse("This view only accepts POST requests.")
-
-    
 def show_payment(request):
      return render(request, 'polls/order.html')
-              
-from razorpay.errors import BadRequestError
-
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
-
+ 
 @csrf_exempt
 def initiate_payment(request):
-
     print("----------")
-    
     if request.method == "POST":
         var_type = request.POST.get('variant_type')
         fuel = request.POST.get('fuel_type')
@@ -452,9 +414,7 @@ def initiate_payment(request):
             file1=file1,
             file2=file2,
             orderid=payid
-            
         )
-        
         # Save the instance to the database
         new_entry.save()
         return render(request, 'polls/payment_success.html')
@@ -464,40 +424,30 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 
-
 def payment_success(request):
     return render(request, 'polls/payment_success.html')
 
 def payment_failure(request):
     return render(request, 'polls/payment_failure.html')
-
-# def empbuy(request):
-#      return render(request, 'polls/empbuy.html')
  
 def empbuy(request):
     date = request.GET.get('date') 
     print("-----------")# Retrieve date from query parameters
     print(date)
-    # Fetch bookings based on the provided date
     if date:
         bookings = CarBooking.objects.filter(created_at=date)
         csv_data = [
         ['Model', 'Variant Type', 'Fuel', 'Color', 'Amount', 'Total Price',
          'First Name', 'Last Name', 'Phone', 'Email', 'Address', 'Order ID', 'Created At']
             ]
-
         for booking in bookings:
             csv_data.append([
             booking.model, booking.var_type, booking.fuel, booking.color_n,
             booking.amount, booking.tot_price, booking.fname, booking.lname,
             booking.phone, booking.email, booking.address, booking.orderid, booking.created_at
         ])
-
     # Convert CSV data to string
         csv_content = '\n'.join([','.join(map(str, row)) for row in csv_data])
-        
-        
-        
     else:
         # If no date is provided, retrieve all bookings
         bookings = CarBooking.objects.all()
@@ -505,14 +455,12 @@ def empbuy(request):
         ['Model', 'Variant Type', 'Fuel', 'Color', 'Amount', 'Total Price',
          'First Name', 'Last Name', 'Phone', 'Email', 'Address', 'Order ID', 'Created At']
             ]
-
         for booking in bookings:
             csv_data.append([
             booking.model, booking.var_type, booking.fuel, booking.color_n,
             booking.amount, booking.tot_price, booking.fname, booking.lname,
             booking.phone, booking.email, booking.address, booking.orderid, booking.created_at
         ])
-
     # Convert CSV data to string
         csv_content = '\n'.join([','.join(map(str, row)) for row in csv_data])
     # Pass bookings and date to the template context
