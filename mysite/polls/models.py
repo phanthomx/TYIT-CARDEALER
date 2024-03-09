@@ -180,3 +180,13 @@ class CarBooking(models.Model):
 
     def __str__(self):
         return f"{self.model} - {self.var_type}"
+    
+class Dealer(models.Model):
+    payment_id =  models.CharField(max_length=100)
+    dealer_no = models.CharField(max_length=50)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    customer_email = models.EmailField()
+    car_model = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Payment {self.payment_id}"

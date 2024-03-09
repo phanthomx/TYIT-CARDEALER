@@ -6,10 +6,11 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import connection
+import hashlib
 
 # Import models once
 from .models import (CarModel,CarColor,CarGalleryInte,CarGalleryVid,CarGalleryExt,CarTech,Carvarient,
-    carFuel,carinfo,Generalinfo, Customer,  Employee, Appointment,Attendee,Event,)
+    carFuel,carinfo,Generalinfo, Customer, Dealer, Employee, Appointment,Attendee,Event,)
 
 import csv
 from django.http import HttpResponse, FileResponse
@@ -377,7 +378,10 @@ def orderinfo(request):
 def show_payment(request):
      return render(request, 'polls/order.html')
  
-@csrf_exempt
+# @csrf_exempt
+from django.shortcuts import render
+from .models import CarBooking  # Import the CarBooking model
+
 def initiate_payment(request):
     print("----------")
     if request.method == "POST":
@@ -415,11 +419,14 @@ def initiate_payment(request):
             file2=file2,
             orderid=payid
         )
+        Deal = Dealer(payment_id=payid,dealer_no="Asc0001",amount=amount,customer_email=email,car_model=model)
         # Save the instance to the database
         new_entry.save()
+        Deal.save()
         return render(request, 'polls/payment_success.html')
     else:
         return render(request, 'polls/payment_failure.html')
+
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt

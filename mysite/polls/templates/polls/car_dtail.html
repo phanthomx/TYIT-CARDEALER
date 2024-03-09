@@ -439,12 +439,12 @@
 <form id="carForm" method="post" action="{% url 'orderinfo' %}">
   {% csrf_token %}
   <!-- Hidden input fields to store selected values -->
-  <input type="text" name="selected_color" id="selected_color_input" required oninvalid="this.setCustomValidity('Please select a color')">
-  <input type="text" name="selected_varient" id="selected_varient_input" required oninvalid="this.setCustomValidity('Please select a variant')">
-  <input type="text" name="selected_fuel" id="selected_fuel_input" required oninvalid="this.setCustomValidity('Please select a fuel type')">
-  <input type="text" name="tot_price" id="tot_price_input" required oninvalid="this.setCustomValidity('Please enter the total price')">
-  <input type="text" name="modelName" id="modelName" value="{{ Model_info.name }}" required oninvalid="this.setCustomValidity('Please enter the model name')">
-  <input type="text" name="bookingAmount" id="bookingAmount_input" value="{{ booking_amount }}" required oninvalid="this.setCustomValidity('Please enter the booking amount')">
+  <input type="hidden" name="selected_color" id="selected_color_input" required oninvalid="this.setCustomValidity('Please select a color')">
+  <input type="hidden" name="selected_varient" id="selected_varient_input" required oninvalid="this.setCustomValidity('Please select a variant')">
+  <input type="hidden" name="selected_fuel" id="selected_fuel_input" required oninvalid="this.setCustomValidity('Please select a fuel type')">
+  <input type="hidden" name="tot_price" id="tot_price_input" required oninvalid="this.setCustomValidity('Please enter the total price')">
+  <input type="hidden" name="modelName" id="modelName" value="{{ Model_info.name }}" required oninvalid="this.setCustomValidity('Please enter the model name')">
+  <input type="hidden" name="bookingAmount" id="bookingAmount_input" value="{{ booking_amount }}" required oninvalid="this.setCustomValidity('Please enter the booking amount')">
 
   <input type="submit"  value="Pay Now!">
 </form>

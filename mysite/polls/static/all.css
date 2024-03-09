@@ -1,21 +1,6 @@
-body {
-    background-image: url("images/mustang.jpeg"); /* Replace 'your-background-image-url.jpg' with the URL or path to your image */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0; /* Remove default body margin */
-    height: 100vh; /* Set the height to the full viewport height */
-  
-    /* Responsive styles using media queries */
-    @media (max-width: 767px) {
-      /* Styles for screens smaller than 768px (e.g., cell phones) */
-      background-position: center top; /* Adjust the position for smaller screens */
-    }
-  }
-  
 header {
-    background-color: #07794f;
-    color: white;
+    background-color: #afe2cf;
+    color: rgb(51, 208, 67);
     padding: 15px;
     position: fixed;  /* Add this line to make the header fixed at the top */
     width: 100%;      /* Set the width to 100% to span the entire viewport */
@@ -47,4 +32,40 @@ nav ul li a {
 @media screen and (max-width: 480px) {
     /* Styles for screens smaller than 480px */
 }
+body {
+    font-family: Arial, sans-serif;
+}
+header {
+    background-color: #95e77a;
+}
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+nav li {
+    display: inline-block;
+    margin-right: 10px;
+}
+nav a {
+    text-decoration: none;
+    color: black;
+}
+h1 {
+    text-align: center;
+    color: rgb(44, 42, 42);
+}
+body {
+  background-image: url("{% static 'images/caaa.jpg' %}"); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 0; /* Remove default body margin */
+  height: 100vh; /* Set the height to the full viewport height */
 
+  /* Responsive styles using media queries */
+  @media (max-width: 767px) {
+    /* Styles for screens smaller than 768px (e.g., cell phones) */
+    background-position: center top; /* Adjust the position for smaller screens */
+  }
+}
