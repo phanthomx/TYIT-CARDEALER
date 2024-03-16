@@ -212,11 +212,11 @@ def defaultpg(request):
         password = request.POST.get('password')
         new_cus = Customer(name=name,Email=email,password=password)
         new_cus.save()
-        template = loader.get_template('polls/EmpLogin.html')
-        return HttpResponse(template.render())
+        template = 'polls/EmpLogin.html'
+        return render(request, template)
     # You may want to handle the case when the request method is not POST
-    template = loader.get_template('polls/EmpLogin.html')
-    return HttpResponse(template.render())
+    template = 'polls/EmpLogin.html'
+    return render(request, template)
 
 def emphome(request):
     if request.method == "POST":
@@ -226,11 +226,11 @@ def emphome(request):
         password = request.POST.get('password')
         new_emp = Employee(Empname=name,Empemail=email,Emppassword=password)
         new_emp.save()
-        template = loader.get_template('polls/EmpLogin.html')
-        return HttpResponse(template.render())
+        template = 'polls/EmpLogin.html'
+        return render(request, template)
     # You may want to handle the case when the request method is not POST
-    template = loader.get_template('polls/EmpLogin.html')
-    return HttpResponse(template.render())
+    template = 'polls/EmpLogin.html'
+    return render(request, template)
 def hi(request):
         return render(request, 'polls/EmpReg.html')
 def servicereq(request):

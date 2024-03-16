@@ -114,16 +114,14 @@
         const someForm = $("#someForm");
         someForm.submit(function (e) {
           e.preventDefault();
-
-         
-
+    
           let nameValue = nameInput.val();
           let emailValue = emailInput.val();
           let passwordValue = passwordInput.val();
           let isNameValid = /^[a-zA-Z]+$/.test(nameValue);
           let isEmailValid = /^\S+@\S+\.\S+$/.test(emailValue);
           let isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(passwordValue);
-
+    
           if (isNameValid && isEmailValid && isPasswordValid) {
             alert("Successful");
             console.log(csrfToken)
@@ -142,13 +140,25 @@
                 alert("Successful");
                 // Handle success response
               },
-
+              error: function (xhr, errmsg, err) {
+                alert("Error occurred");
                 // Handle error response
-        
+              }
             });
+          } else {
+            if (!isNameValid) {
+              alert("Invalid Name");
+            }
+            if (!isEmailValid) {
+              alert("Invalid Email");
+            }
+            if (!isPasswordValid) {
+              alert("Invalid Password. Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long.");
+            }
           }
         });
       });
     </script>
+    
   </body>
 </html>
